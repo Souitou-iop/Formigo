@@ -1,0 +1,18 @@
+Formigo ships FFmpeg as a separate program (bin/ffmpeg), which it runs to
+convert video and sound. FFmpeg is not part of Formigo's own code.
+
+FFmpeg — https://ffmpeg.org — Copyright (c) 2000-2026 the FFmpeg developers.
+
+macOS (arm64, x86_64): FFmpeg 9.0.2, static build by Martin Riedl
+  https://ffmpeg.martin-riedl.de — configured with --enable-gpl, so this
+  build is licensed under the GNU General Public License, version 2 or later
+  (https://www.gnu.org/licenses/gpl-2.0.html).
+
+Windows (x64) and Linux (x64): FFmpeg 8.1, "lgpl" static build by BtbN
+  https://github.com/BtbN/FFmpeg-Builds — licensed under the GNU Lesser
+  General Public License, version 3 or later; its license text is in
+  FFmpeg-LGPL.txt beside this file.
+
+The source code of FFmpeg and of the libraries these builds include is
+available from https://ffmpeg.org/download.html, from the builders' pages
+above, and on request from Formigo's publisher.

@@ -1,0 +1,17 @@
+# Builds
+/dist/
+/formigo
+/formigo.exe
+.mygo/
+.work/
+mygo_windows_*.syso
+.DS_Store
+
+# FFmpeg is fetched, not tracked: tools/fetch-ffmpeg.sh
+/resources/*/bin/
+
+# Native apps' builds and the screenshots of their checks
+/android/dist/
+/ios/dist/
+/ios/build/
+/ios/screenshots/

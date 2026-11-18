@@ -1,0 +1,588 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0A3465CF8FD1F03ADEB2124C /* VideoEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55CCFCCBBD010A3DBBA470CF /* VideoEngine.swift */; };
+		2A79B99EC216F0E5247A4840 /* FormigoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058C01E44B909B12FE56BBAF /* FormigoApp.swift */; };
+		2B538CC16B03B32736A1ED6A /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = 6BE4779BDC9A6DDD0CFB20DA /* Yams */; };
+		3570294EFF852397C4727BA4 /* SubtitleEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D82CEE425433A20972BE29 /* SubtitleEngine.swift */; };
+		42F270E29C2E01A767D43E6E /* Formats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D26DB4F35A8AFC72841BD4D /* Formats.swift */; };
+		508DA1DA9BF1FDA6668754E6 /* TOMLKit in Frameworks */ = {isa = PBXBuildFile; productRef = 7AAEA0F5696F5FD3FAC97B6F /* TOMLKit */; };
+		55A1593F93E36EC4A5B7AE11 /* FormigoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2150B599985BD62E87545E37 /* FormigoTests.swift */; };
+		5A572E534693E685BBC8C02B /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1287E6F962652E509887D66 /* AppSettings.swift */; };
+		682A6B88DAC1AB162A6C67A5 /* Engine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D232D791139A504BD64EA908 /* Engine.swift */; };
+		84D5123A7C362B16F6453176 /* ImageEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13B138D98BB7A6DB91653F5 /* ImageEngine.swift */; };
+		96D72C0ECDCE6B2900566E89 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D33721CCE0040DCF2377C3B /* Assets.xcassets */; };
+		97F5C9D314CEB65CB8D9CDC4 /* AudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AD33E24C93636D9CE514FC /* AudioEngine.swift */; };
+		A568B708AE7FA59D83C60E17 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = B76D5F9C8F2B02CB129A7DD1 /* ZIPFoundation */; };
+		A5BCE9BA7A3BF03A41323285 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = BED424088D99321BCA3A27DC /* Components.swift */; };
+		AE4C9BE0B154D18DE35126DA /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE4F35363E174FC11458B60 /* Queue.swift */; };
+		B975FD2767938126955E404B /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA5791E81F142C73F6D36F0 /* Theme.swift */; };
+		C900D35BCFC061281F526DA0 /* OrbitHero.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67CDFBBAD0CC697D47390445 /* OrbitHero.swift */; };
+		CF0BED10F4E6B6B4F0DAB3D6 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 32E8294A28E58AEC461BA82D /* AppIcon.icon */; };
+		D6F4154FE04E83D6406C17BE /* ConvertScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D71D74AF8AC33AE26B26083 /* ConvertScreen.swift */; };
+		DC8254AA1206866450E3A7AD /* Sheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05BCD78233B8A14985845011 /* Sheets.swift */; };
+		EF91260FAD595D4A7C82B4AE /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389BEA03DAE9FA9D41A48EB8 /* SettingsScreen.swift */; };
+		F4915F3A2F7323D18EF780A5 /* DocEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1540FBBFBE04541D2892A3F /* DocEngine.swift */; };
+		F81E2F0480DD48CA50F75170 /* DataEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD094D1B114DDEE9FC19358E /* DataEngine.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4F36A3B177F029AECA65E816 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B0D465D71FB0400518B4A08C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2F4FF248B972BB185F848AA6;
+			remoteInfo = Formigo;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		058C01E44B909B12FE56BBAF /* FormigoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormigoApp.swift; sourceTree = "<group>"; };
+		05BCD78233B8A14985845011 /* Sheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sheets.swift; sourceTree = "<group>"; };
+		1D26DB4F35A8AFC72841BD4D /* Formats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formats.swift; sourceTree = "<group>"; };
+		2150B599985BD62E87545E37 /* FormigoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormigoTests.swift; sourceTree = "<group>"; };
+		26D82CEE425433A20972BE29 /* SubtitleEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtitleEngine.swift; sourceTree = "<group>"; };
+		32E8294A28E58AEC461BA82D /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = AppIcon.icon; sourceTree = "<group>"; };
+		389BEA03DAE9FA9D41A48EB8 /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
+		3BA5791E81F142C73F6D36F0 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		4D71D74AF8AC33AE26B26083 /* ConvertScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConvertScreen.swift; sourceTree = "<group>"; };
+		55CCFCCBBD010A3DBBA470CF /* VideoEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEngine.swift; sourceTree = "<group>"; };
+		60040186B5C9546703CDE595 /* FormigoTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = FormigoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		67CDFBBAD0CC697D47390445 /* OrbitHero.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitHero.swift; sourceTree = "<group>"; };
+		92CB9FD18CF8C9413FDBA509 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		9D33721CCE0040DCF2377C3B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		ABE4F35363E174FC11458B60 /* Queue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
+		BED424088D99321BCA3A27DC /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
+		C1287E6F962652E509887D66 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		CD094D1B114DDEE9FC19358E /* DataEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataEngine.swift; sourceTree = "<group>"; };
+		D232D791139A504BD64EA908 /* Engine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Engine.swift; sourceTree = "<group>"; };
+		D4AD33E24C93636D9CE514FC /* AudioEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioEngine.swift; sourceTree = "<group>"; };
+		DBABE9B4EC28C5A51ECB2B7E /* Formigo.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Formigo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1540FBBFBE04541D2892A3F /* DocEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocEngine.swift; sourceTree = "<group>"; };
+		F13B138D98BB7A6DB91653F5 /* ImageEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageEngine.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		13618AE57ECFA6550B85E1EF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2B538CC16B03B32736A1ED6A /* Yams in Frameworks */,
+				508DA1DA9BF1FDA6668754E6 /* TOMLKit in Frameworks */,
+				A568B708AE7FA59D83C60E17 /* ZIPFoundation in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4690F600A2F3B5CB1B1CBD1F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				BED424088D99321BCA3A27DC /* Components.swift */,
+				4D71D74AF8AC33AE26B26083 /* ConvertScreen.swift */,
+				67CDFBBAD0CC697D47390445 /* OrbitHero.swift */,
+				389BEA03DAE9FA9D41A48EB8 /* SettingsScreen.swift */,
+				05BCD78233B8A14985845011 /* Sheets.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		51050FA0A09D9A0085A44144 /* Engine */ = {
+			isa = PBXGroup;
+			children = (
+				D4AD33E24C93636D9CE514FC /* AudioEngine.swift */,
+				CD094D1B114DDEE9FC19358E /* DataEngine.swift */,
+				E1540FBBFBE04541D2892A3F /* DocEngine.swift */,
+				D232D791139A504BD64EA908 /* Engine.swift */,
+				1D26DB4F35A8AFC72841BD4D /* Formats.swift */,
+				F13B138D98BB7A6DB91653F5 /* ImageEngine.swift */,
+				26D82CEE425433A20972BE29 /* SubtitleEngine.swift */,
+				55CCFCCBBD010A3DBBA470CF /* VideoEngine.swift */,
+			);
+			path = Engine;
+			sourceTree = "<group>";
+		};
+		75BE9473D5BCB386AA904A24 = {
+			isa = PBXGroup;
+			children = (
+				8464E79A4BCA8A1998B8701D /* Formigo */,
+				7BAFCC2D25A3C9F6E84D3DB6 /* FormigoTests */,
+				D844D924B599C910D9D34507 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7BAFCC2D25A3C9F6E84D3DB6 /* FormigoTests */ = {
+			isa = PBXGroup;
+			children = (
+				2150B599985BD62E87545E37 /* FormigoTests.swift */,
+			);
+			path = FormigoTests;
+			sourceTree = "<group>";
+		};
+		8464E79A4BCA8A1998B8701D /* Formigo */ = {
+			isa = PBXGroup;
+			children = (
+				92CB9FD18CF8C9413FDBA509 /* Info.plist */,
+				FED6B24760E72B9B43232C22 /* App */,
+				51050FA0A09D9A0085A44144 /* Engine */,
+				B5D31AE33752E61685A2952C /* Model */,
+				D8786A45BE60295C40EE16F3 /* Resources */,
+				4690F600A2F3B5CB1B1CBD1F /* Views */,
+			);
+			path = Formigo;
+			sourceTree = "<group>";
+		};
+		B5D31AE33752E61685A2952C /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				C1287E6F962652E509887D66 /* AppSettings.swift */,
+				ABE4F35363E174FC11458B60 /* Queue.swift */,
+				3BA5791E81F142C73F6D36F0 /* Theme.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		D844D924B599C910D9D34507 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DBABE9B4EC28C5A51ECB2B7E /* Formigo.app */,
+				60040186B5C9546703CDE595 /* FormigoTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D8786A45BE60295C40EE16F3 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				32E8294A28E58AEC461BA82D /* AppIcon.icon */,
+				9D33721CCE0040DCF2377C3B /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		FED6B24760E72B9B43232C22 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				058C01E44B909B12FE56BBAF /* FormigoApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1C24A3E84F548E6E01FF9B75 /* FormigoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 831F4D0D275F8C54B064F768 /* Build configuration list for PBXNativeTarget "FormigoTests" */;
+			buildPhases = (
+				67B74D97DBC344A9CA2B2E9C /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4987D896FF26FE1A9EF70F27 /* PBXTargetDependency */,
+			);
+			name = FormigoTests;
+			packageProductDependencies = (
+			);
+			productName = FormigoTests;
+			productReference = 60040186B5C9546703CDE595 /* FormigoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		2F4FF248B972BB185F848AA6 /* Formigo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EB9FBEE02B73389B865E8D5E /* Build configuration list for PBXNativeTarget "Formigo" */;
+			buildPhases = (
+				9DB5E706E58156445CC70B05 /* Sources */,
+				DCD8EA392C3A09F8A8CEFBA1 /* Resources */,
+				13618AE57ECFA6550B85E1EF /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Formigo;
+			packageProductDependencies = (
+				6BE4779BDC9A6DDD0CFB20DA /* Yams */,
+				7AAEA0F5696F5FD3FAC97B6F /* TOMLKit */,
+				B76D5F9C8F2B02CB129A7DD1 /* ZIPFoundation */,
+			);
+			productName = Formigo;
+			productReference = DBABE9B4EC28C5A51ECB2B7E /* Formigo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B0D465D71FB0400518B4A08C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 1C454D22BC257AC9A4F5C4AB /* Build configuration list for PBXProject "Formigo" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 75BE9473D5BCB386AA904A24;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				5CD079DF60B9E0D78813C2E8 /* XCRemoteSwiftPackageReference "TOMLKit" */,
+				B83603D0D197EE6941CF8C10 /* XCRemoteSwiftPackageReference "Yams" */,
+				07C8D7FBE4891D49CF1BA7B9 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = D844D924B599C910D9D34507 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2F4FF248B972BB185F848AA6 /* Formigo */,
+				1C24A3E84F548E6E01FF9B75 /* FormigoTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DCD8EA392C3A09F8A8CEFBA1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CF0BED10F4E6B6B4F0DAB3D6 /* AppIcon.icon in Resources */,
+				96D72C0ECDCE6B2900566E89 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		67B74D97DBC344A9CA2B2E9C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				55A1593F93E36EC4A5B7AE11 /* FormigoTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9DB5E706E58156445CC70B05 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A572E534693E685BBC8C02B /* AppSettings.swift in Sources */,
+				97F5C9D314CEB65CB8D9CDC4 /* AudioEngine.swift in Sources */,
+				A5BCE9BA7A3BF03A41323285 /* Components.swift in Sources */,
+				D6F4154FE04E83D6406C17BE /* ConvertScreen.swift in Sources */,
+				F81E2F0480DD48CA50F75170 /* DataEngine.swift in Sources */,
+				F4915F3A2F7323D18EF780A5 /* DocEngine.swift in Sources */,
+				682A6B88DAC1AB162A6C67A5 /* Engine.swift in Sources */,
+				42F270E29C2E01A767D43E6E /* Formats.swift in Sources */,
+				2A79B99EC216F0E5247A4840 /* FormigoApp.swift in Sources */,
+				84D5123A7C362B16F6453176 /* ImageEngine.swift in Sources */,
+				C900D35BCFC061281F526DA0 /* OrbitHero.swift in Sources */,
+				AE4C9BE0B154D18DE35126DA /* Queue.swift in Sources */,
+				EF91260FAD595D4A7C82B4AE /* SettingsScreen.swift in Sources */,
+				DC8254AA1206866450E3A7AD /* Sheets.swift in Sources */,
+				3570294EFF852397C4727BA4 /* SubtitleEngine.swift in Sources */,
+				B975FD2767938126955E404B /* Theme.swift in Sources */,
+				0A3465CF8FD1F03ADEB2124C /* VideoEngine.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4987D896FF26FE1A9EF70F27 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2F4FF248B972BB185F848AA6 /* Formigo */;
+			targetProxy = 4F36A3B177F029AECA65E816 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0C35D308E12D084BABB78AE3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 300;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.3.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				OTHER_SWIFT_FLAGS = "-enable-bare-slash-regex";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_UPCOMING_FEATURE_BARE_SLASH_REGEX_LITERALS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		163A9B32DC250F29D4A1B514 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.formigo.app.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Formigo.app/Formigo";
+			};
+			name = Release;
+		};
+		1F64029E47466A9A91D3FCAD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Formigo/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.formigo.app;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9258C6B31D1FE92C4249E8CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 300;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.3.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = "-enable-bare-slash-regex";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_UPCOMING_FEATURE_BARE_SLASH_REGEX_LITERALS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		B3FEF5167A547E85BB919BB9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Formigo/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.formigo.app;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		E49C0EF5BFE812C0289D3403 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.formigo.app.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Formigo.app/Formigo";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1C454D22BC257AC9A4F5C4AB /* Build configuration list for PBXProject "Formigo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9258C6B31D1FE92C4249E8CD /* Debug */,
+				0C35D308E12D084BABB78AE3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		831F4D0D275F8C54B064F768 /* Build configuration list for PBXNativeTarget "FormigoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E49C0EF5BFE812C0289D3403 /* Debug */,
+				163A9B32DC250F29D4A1B514 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		EB9FBEE02B73389B865E8D5E /* Build configuration list for PBXNativeTarget "Formigo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F64029E47466A9A91D3FCAD /* Debug */,
+				B3FEF5167A547E85BB919BB9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		07C8D7FBE4891D49CF1BA7B9 /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/weichsel/ZIPFoundation";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.19;
+			};
+		};
+		5CD079DF60B9E0D78813C2E8 /* XCRemoteSwiftPackageReference "TOMLKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/LebJe/TOMLKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.6.0;
+			};
+		};
+		B83603D0D197EE6941CF8C10 /* XCRemoteSwiftPackageReference "Yams" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jpsim/Yams";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6BE4779BDC9A6DDD0CFB20DA /* Yams */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B83603D0D197EE6941CF8C10 /* XCRemoteSwiftPackageReference "Yams" */;
+			productName = Yams;
+		};
+		7AAEA0F5696F5FD3FAC97B6F /* TOMLKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5CD079DF60B9E0D78813C2E8 /* XCRemoteSwiftPackageReference "TOMLKit" */;
+			productName = TOMLKit;
+		};
+		B76D5F9C8F2B02CB129A7DD1 /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 07C8D7FBE4891D49CF1BA7B9 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = B0D465D71FB0400518B4A08C /* Project object */;
+}

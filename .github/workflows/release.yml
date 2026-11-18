@@ -1,0 +1,182 @@
+# Builds every platform when a version tag such as v0.3.0 is pushed, and
+# uploads the installers and packages to a draft release: the desktop app
+# (macOS, Windows, Linux) with the FFmpeg it bundles, the Android APK and
+# the unsigned iOS IPA. Once everything is built, the release notes get
+# their download links and the release is published as the latest.
+#
+# Running the workflow by hand with a tag tags the commit it runs on.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "The version tag to create and release, such as v0.3.0"
+        required: true
+      notes_only:
+        description: "Only rewrite the notes of the existing release, from CHANGELOG.md"
+        type: boolean
+        default: false
+
+env:
+  TAG: ${{ inputs.tag || github.ref_name }}
+
+permissions:
+  contents: write # the release, and the uploads to it
+
+jobs:
+  draft-release:
+    if: ${{ !inputs.notes_only }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Check the versions
+        run: |
+          v="${TAG#v}"
+          test "$v" = "$(jq -r .version mygo.json)"
+          grep -q "versionName = \"$v\"" android/app/build.gradle.kts
+          grep -q "MARKETING_VERSION: \"$v\"" ios/project.yml
+      - name: Write the release notes
+        # The downloads are added once the files are uploaded, in finish.
+        run: .github/release-notes.sh "$TAG" > notes.md
+      - name: Create the draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! gh release view "$TAG" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" \
+              --draft --target "$GITHUB_SHA" --title "Formigo $TAG" --notes-file notes.md
+          fi
+
+  desktop:
+    needs: draft-release
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: macOS, os: macos-latest, platform: darwin/universal, ffmpeg: darwin }
+          - { name: Windows, os: ubuntu-latest, platform: windows/amd64, ffmpeg: windows }
+          - { name: Linux, os: ubuntu-latest, platform: linux/amd64, ffmpeg: linux }
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+      - name: Install NSIS, for the Windows installer
+        if: matrix.name == 'Windows'
+        run: sudo apt-get update && sudo apt-get install -y nsis
+      - name: Fetch FFmpeg
+        run: tools/fetch-ffmpeg.sh ${{ matrix.ffmpeg }}
+      - name: Test
+        if: matrix.name == 'macOS'
+        run: go test ./...
+      - name: Build
+        # The disk image or installer where the runner can make it; the app
+        # alone otherwise, which the next step packs.
+        run: |
+          go tool mygo build -platform "${{ matrix.platform }}" ||
+            go tool mygo build -skip-dmg -skip-installer -platform "${{ matrix.platform }}"
+      - name: Pack the portable builds
+        env:
+          V: ${{ env.TAG }}
+        run: |
+          v="${V#v}"
+          mkdir -p out
+          case "${{ matrix.name }}" in
+            macOS)
+              if ls dist/darwin-universal/*.dmg > /dev/null 2>&1; then
+                cp dist/darwin-universal/*.dmg "out/formigo-$v-macos-universal.dmg"
+              else
+                ditto -c -k --keepParent dist/darwin-universal/Formigo.app "out/formigo-$v-macos-universal.zip"
+              fi ;;
+            Windows)
+              cp dist/windows-amd64/*-setup-*.exe out/ 2> /dev/null || true
+              (cd dist/windows-amd64 && zip -qr "../../out/formigo-$v-windows-amd64-portable.zip" Formigo.exe bin licenses icon.png) ;;
+            Linux)
+              cp dist/linux-amd64/*.deb dist/linux-amd64/*.rpm dist/linux-amd64/*.tar.gz out/ ;;
+          esac
+          ls -la out
+      - name: Upload
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" --clobber out/*
+
+  android:
+    needs: draft-release
+    name: Android
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+      - uses: gradle/actions/setup-gradle@v5
+      - name: Test and build
+        working-directory: android
+        run: ./gradlew --no-daemon testReleaseUnitTest assembleRelease
+      - name: Upload
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          v="${TAG#v}"
+          cp android/app/build/outputs/apk/release/app-release.apk "formigo-$v-android.apk"
+          gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" --clobber "formigo-$v-android.apk"
+
+  ios:
+    needs: draft-release
+    name: iOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+      - name: Build the unsigned IPA
+        working-directory: ios
+        run: |
+          xcodebuild archive -project Formigo.xcodeproj -scheme Formigo -configuration Release \
+            -destination 'generic/platform=iOS' -archivePath build/Formigo.xcarchive \
+            -derivedDataPath build/DerivedData -clonedSourcePackagesDirPath build/SourcePackages \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" | tail -n 40
+          mkdir -p build/ipa/Payload
+          cp -R build/Formigo.xcarchive/Products/Applications/Formigo.app build/ipa/Payload/
+          (cd build/ipa && zip -qry "../formigo-${TAG#v}-ios-unsigned.ipa" Payload)
+      - name: Upload
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" --clobber "ios/build/formigo-${TAG#v}-ios-unsigned.ipa"
+
+  finish:
+    # Checksums the uploads, links them from the notes and publishes the
+    # release as the latest.
+    needs: [desktop, android, ios]
+    if: ${{ !cancelled() && ((needs.desktop.result == 'success' && needs.android.result == 'success' && needs.ios.result == 'success') || inputs.notes_only) }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Checksums
+        if: ${{ !inputs.notes_only }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir assets && cd assets
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --skip-existing
+          rm -f SHA256SUMS
+          sha256sum -- * > SHA256SUMS
+          gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" --clobber SHA256SUMS
+      - name: Write the release notes, with the downloads
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          .github/release-notes.sh "$TAG" > notes.md
+          gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --notes-file notes.md
+      - name: Publish the release
+        if: ${{ !inputs.notes_only }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --draft=false --prerelease=false --latest

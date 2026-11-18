@@ -1,0 +1,3 @@
+-dontwarn java.beans.**
+-dontwarn org.snakeyaml.engine.**
+-keep class org.snakeyaml.engine.** { *; }

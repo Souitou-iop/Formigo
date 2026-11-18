@@ -1,0 +1,21 @@
+{
+  "name": "Formigo",
+  "slug": "formigo",
+  "identifier": "dev.formigo.app",
+  "version": "0.3.0",
+  "copyright": "© 2026 Formigo",
+  "out": "dist",
+  "linux": {
+    "comment": "Convert pictures, sound, data and documents on your computer",
+    "categories": [
+      "Utility",
+      "Graphics",
+      "AudioVideo"
+    ],
+    "webview": false
+  },
+  "macos": {
+    "minimumSystemVersion": "12.0",
+    "icon": "design/AppIcon.icon"
+  }
+}
