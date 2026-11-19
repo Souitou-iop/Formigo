@@ -37,7 +37,7 @@ func TestMatrix(t *testing.T) {
 	put("svg", "seed.svg", []byte(`<svg xmlns="http://www.w3.org/2000/svg" width="64" height="40"><rect width="64" height="40" fill="#3ccf9e"/><circle cx="32" cy="20" r="12" fill="#ff9447"/></svg>`))
 	samples := make([]int16, 22050)
 	for i := range samples {
-		samples[i] = int16(8000 * ((i / 50) % 2 * 2 - 1))
+		samples[i] = int16(8000 * ((i/50)%2*2 - 1))
 	}
 	put("wav", "seed.wav", wav16(22050, 1, samples))
 	put("json", "seed.json", []byte(`[{"name":"小地鼠","size":3,"ok":true},{"name":"Formigo","size":7,"ok":false}]`))
