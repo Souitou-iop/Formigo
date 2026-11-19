@@ -164,7 +164,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          mkdir assets && cd assets
+          mkdir -p "$RUNNER_TEMP/uploads" && cd "$RUNNER_TEMP/uploads"
           gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --skip-existing
           rm -f SHA256SUMS
           sha256sum -- * > SHA256SUMS
