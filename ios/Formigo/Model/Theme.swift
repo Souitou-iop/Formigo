@@ -8,18 +8,39 @@ extension Color {
     }
 }
 
-/// A theme the user may choose: one main color over neutral graphite.
+/// What a theme tints beyond its main color. In the light appearance: the
+/// page, raised and highlighted fills, and the deep ink of text, sticker edges
+/// and their hard shadows. In the dark one: the page and the surfaces on it,
+/// faintly.
+struct Tones {
+    var bg: UInt32, panel: UInt32 = 0, surface: UInt32 = 0, raised: UInt32, tint: UInt32
+    var ink: UInt32 = 0, muted: UInt32 = 0, faint: UInt32 = 0
+}
+
+/// A theme the user may choose: a main color, flat as the icon's, and the
+/// tones it gives the rest of the app.
 struct Accent: Identifiable {
     let id: String
     let name: String
     let light: UInt32
     let dark: UInt32
+    let day: Tones
+    let night: Tones
 
+    // The same table is in the desktop's settings.go and Android's Theme.kt.
     static let all = [
-        Accent(id: "mint", name: "薄荷", light: 0x11996A, dark: 0x3CCF9E),
-        Accent(id: "orange", name: "暖橘", light: 0xE2681C, dark: 0xFF9447),
-        Accent(id: "sky", name: "地鼠天蓝", light: 0x1F7FE0, dark: 0x5CB9F7),
-        Accent(id: "neutral", name: "中性白", light: 0x1A1B1F, dark: 0xECECEE),
+        Accent(id: "mint", name: "薄荷", light: 0x11996A, dark: 0x3CCF9E,
+               day: Tones(bg: 0xF0F7F3, raised: 0xE5F4EC, tint: 0xDBF0E5, ink: 0x0B3626, muted: 0x4F6B5F, faint: 0x86A094),
+               night: Tones(bg: 0x101614, panel: 0x151C19, surface: 0x19211E, raised: 0x212B27, tint: 0x1C3129)),
+        Accent(id: "orange", name: "暖橘", light: 0xE2681C, dark: 0xFF9447,
+               day: Tones(bg: 0xFBF5F0, raised: 0xFCEBDF, tint: 0xFBE2D0, ink: 0x3D1D0A, muted: 0x7A5C4A, faint: 0xAB9283),
+               night: Tones(bg: 0x161210, panel: 0x1C1714, surface: 0x211B17, raised: 0x2B231E, tint: 0x382619)),
+        Accent(id: "sky", name: "地鼠天蓝", light: 0x1F7FE0, dark: 0x5CB9F7,
+               day: Tones(bg: 0xF2F6FC, raised: 0xE9F3FE, tint: 0xE3F2FE, ink: 0x14213D, muted: 0x56627E, faint: 0x8E99B2),
+               night: Tones(bg: 0x10141A, panel: 0x151A21, surface: 0x192027, raised: 0x212933, tint: 0x1C2C3B)),
+        Accent(id: "neutral", name: "中性黑白", light: 0x1A1B1F, dark: 0xECECEE,
+               day: Tones(bg: 0xF4F4F5, raised: 0xEDEDEE, tint: 0xE7E7E9, ink: 0x1A1B1F, muted: 0x5F6168, faint: 0x95979E),
+               night: Tones(bg: 0x111214, panel: 0x16171A, surface: 0x1A1B1F, raised: 0x222328, tint: 0x24262B)),
     ]
 
     static let defaultID = "neutral"
@@ -66,6 +87,12 @@ struct Palette {
                         accent: Color(hex: accent.dark), accentInk: Accent.ink(on: accent.dark),
                         sky: Color(hex: 0x5CB9F7), skyTint: Color(hex: 0x24262B),
                         ok: Color(hex: 0xA3D65C), bad: Color(hex: 0xFF6B74))
+            let t = accent.night
+            p.bg = Color(hex: t.bg)
+            p.panel = Color(hex: t.panel)
+            p.surface = Color(hex: t.surface)
+            p.raised = Color(hex: t.raised)
+            p.skyTint = Color(hex: t.tint)
             if oled {
                 // Pure black for OLED panels; cards a very deep grey so they still read.
                 p.bg = .black
@@ -85,6 +112,16 @@ struct Palette {
                         accent: Color(hex: accent.light), accentInk: Accent.ink(on: accent.light),
                         sky: Color(hex: 0x5CB9F7), skyTint: Color(hex: 0xE3F2FE),
                         ok: Color(hex: 0x5F9E1F), bad: Color(hex: 0xEF4F5A))
+            let t = accent.day
+            p.bg = Color(hex: t.bg)
+            p.raised = Color(hex: t.raised)
+            p.skyTint = Color(hex: t.tint)
+            p.outline = Color(hex: t.ink)
+            p.ink = Color(hex: t.ink)
+            p.muted = Color(hex: t.muted)
+            p.faint = Color(hex: t.faint)
+            p.line = Color(hex: t.ink, alpha: 0.11)
+            p.lineStrong = Color(hex: t.ink, alpha: 0.2)
         }
         return p
     }

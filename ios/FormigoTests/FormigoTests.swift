@@ -1,6 +1,7 @@
 import AVFoundation
 import ImageIO
 import PDFKit
+import SwiftUI
 import UIKit
 import XCTest
 @testable import Formigo
@@ -360,6 +361,22 @@ final class ThemeTests: XCTestCase {
         XCTAssertEqual(Accent.by("").id, "neutral")
         XCTAssertEqual(Accent.by("orange").id, "orange")
         XCTAssertEqual(Accent.all.map(\.id), ["mint", "orange", "sky", "neutral"])
+        XCTAssertEqual(Accent.by("neutral").name, "中性黑白")
+    }
+
+    /// A theme tints the whole app, not only its accent: in the light, the
+    /// page and the ink of text and sticker edges; in the dark, the surfaces.
+    func testThemesTintTheWholeApp() {
+        for a in Accent.all {
+            let light = Palette.make(dark: false, oled: false, accent: a)
+            XCTAssertEqual(light.bg, Color(hex: a.day.bg), a.id)
+            XCTAssertEqual(light.outline, Color(hex: a.day.ink), a.id)
+            XCTAssertEqual(light.ink, Color(hex: a.day.ink), a.id)
+            let dark = Palette.make(dark: true, oled: false, accent: a)
+            XCTAssertEqual(dark.bg, Color(hex: a.night.bg), a.id)
+            XCTAssertEqual(dark.surface, Color(hex: a.night.surface), a.id)
+            XCTAssertEqual(Palette.make(dark: true, oled: true, accent: a).bg, Color.black, a.id)
+        }
     }
 }
 

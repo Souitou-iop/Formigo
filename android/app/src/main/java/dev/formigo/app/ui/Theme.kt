@@ -65,14 +65,48 @@ data class Palette(
     fun hueInk(k: Kind): Color = lerp(hue(k), outline, if (dark) 0.0f else 0.25f)
 }
 
-data class Accent(val id: String, val name: String, val light: Color, val dark: Color)
-
-val accents = listOf(
-    Accent("mint", "薄荷", Color(0xFF11996A), Color(0xFF3CCF9E)),
-    Accent("orange", "暖橘", Color(0xFFE2681C), Color(0xFFFF9447)),
-    Accent("sky", "地鼠天蓝", Color(0xFF1F7FE0), Color(0xFF5CB9F7)),
-    Accent("neutral", "中性白", Color(0xFF1A1B1F), Color(0xFFECECEE)),
+/**
+ * What a theme tints beyond its main color. In the light appearance: the page,
+ * raised and highlighted fills, and the deep ink of text, sticker edges and
+ * their hard shadows. In the dark one: the page and the surfaces on it, faintly.
+ */
+data class Tones(
+    val bg: Long, val panel: Long = 0, val surface: Long = 0, val raised: Long, val tint: Long,
+    val ink: Long = 0, val muted: Long = 0, val faint: Long = 0,
 )
+
+/** A theme: a main color, flat as the icon's, and the tones it gives the rest of the app. */
+data class Accent(val id: String, val name: String, val light: Color, val dark: Color, val day: Tones, val night: Tones)
+
+// The same table is in the desktop's settings.go and iOS's Theme.swift.
+val accents = listOf(
+    Accent("mint", "薄荷", Color(0xFF11996A), Color(0xFF3CCF9E),
+        Tones(bg = 0xFFF0F7F3, raised = 0xFFE5F4EC, tint = 0xFFDBF0E5, ink = 0xFF0B3626, muted = 0xFF4F6B5F, faint = 0xFF86A094),
+        Tones(bg = 0xFF101614, panel = 0xFF151C19, surface = 0xFF19211E, raised = 0xFF212B27, tint = 0xFF1C3129)),
+    Accent("orange", "暖橘", Color(0xFFE2681C), Color(0xFFFF9447),
+        Tones(bg = 0xFFFBF5F0, raised = 0xFFFCEBDF, tint = 0xFFFBE2D0, ink = 0xFF3D1D0A, muted = 0xFF7A5C4A, faint = 0xFFAB9283),
+        Tones(bg = 0xFF161210, panel = 0xFF1C1714, surface = 0xFF211B17, raised = 0xFF2B231E, tint = 0xFF382619)),
+    Accent("sky", "地鼠天蓝", Color(0xFF1F7FE0), Color(0xFF5CB9F7),
+        Tones(bg = 0xFFF2F6FC, raised = 0xFFE9F3FE, tint = 0xFFE3F2FE, ink = 0xFF14213D, muted = 0xFF56627E, faint = 0xFF8E99B2),
+        Tones(bg = 0xFF10141A, panel = 0xFF151A21, surface = 0xFF192027, raised = 0xFF212933, tint = 0xFF1C2C3B)),
+    Accent("neutral", "中性黑白", Color(0xFF1A1B1F), Color(0xFFECECEE),
+        Tones(bg = 0xFFF4F4F5, raised = 0xFFEDEDEE, tint = 0xFFE7E7E9, ink = 0xFF1A1B1F, muted = 0xFF5F6168, faint = 0xFF95979E),
+        Tones(bg = 0xFF111214, panel = 0xFF16171A, surface = 0xFF1A1B1F, raised = 0xFF222328, tint = 0xFF24262B)),
+)
+
+/** A palette in a theme's tones. */
+private fun Palette.themed(a: Accent): Palette = if (dark) {
+    val t = a.night
+    copy(bg = Color(t.bg), panel = Color(t.panel), surface = Color(t.surface), raised = Color(t.raised), skyTint = Color(t.tint))
+} else {
+    val t = a.day
+    val ink = Color(t.ink)
+    copy(
+        bg = Color(t.bg), raised = Color(t.raised), skyTint = Color(t.tint),
+        outline = ink, ink = ink, muted = Color(t.muted), faint = Color(t.faint),
+        line = ink.copy(alpha = 0.11f), lineStrong = ink.copy(alpha = 0.2f),
+    )
+}
 
 /** The accent a new install starts with, and what unknown or retired ids fall back to. */
 const val DEFAULT_ACCENT = "neutral"
@@ -96,14 +130,15 @@ fun palette(dark: Boolean, accentId: String, oled: Boolean = false): Palette {
         accent = Color(0xFF1F6BFF), accentPressed = Color(0xFF1555DC), accentInk = Color.White,
         sky = Color(0xFF5CB9F7), skyTint = Color(0xFFE3F2FE), ok = Color(0xFF5F9E1F), bad = Color(0xFFEF4F5A),
     )
+    val a = accentById(accentId)
+    val tinted = base.themed(a)
     // OLED: the page is black, cards a near black kept apart by thin edges.
-    val base2 = if (dark && oled) base.copy(
+    val base2 = if (dark && oled) tinted.copy(
         oled = true,
         bg = Color.Black, panel = Color(0xFF0B0B0D), surface = Color(0xFF0B0B0D), raised = Color(0xFF16161A),
         line = Color.White.copy(alpha = 0.10f), lineStrong = Color.White.copy(alpha = 0.20f),
         outline = Color.Black, skyTint = Color(0xFF18181C),
-    ) else base
-    val a = accentById(accentId)
+    ) else tinted
     val accent = if (dark) a.dark else a.light
     // White or graphite on the accent, whichever reads better.
     val graphite = Color(0xFF101113)

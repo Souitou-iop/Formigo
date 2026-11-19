@@ -66,7 +66,7 @@
 
 ### 外观
 
-- 四套主题：中性白（默认）、薄荷、暖橘、地鼠天蓝
+- 四套主题：中性黑白（默认）、薄荷、暖橘、地鼠天蓝；主题不只换按钮颜色，页面底色、卡片、描边、投影和文字都跟着染色
 - 浅色、深色和 OLED 纯黑模式
 - 会动的小地鼠：文件绕着它转，点一下它会跳；动画可在设置里调成「安静」或关闭
 
@@ -80,7 +80,7 @@
 <p align="center">
   <img src="docs/screenshots/android-home.png" width="19%" alt="Android 首页，深色">
   <img src="docs/screenshots/android-light.png" width="19%" alt="Android 首页，浅色">
-  <img src="docs/screenshots/ios-home.png" width="19%" alt="iOS 首页，中性白主题">
+  <img src="docs/screenshots/ios-home.png" width="19%" alt="iOS 首页，中性黑白主题">
   <img src="docs/screenshots/ios-orange.png" width="19%" alt="iOS 首页，暖橘主题">
   <img src="docs/screenshots/ios-settings.png" width="19%" alt="iOS 设置页">
 </p>

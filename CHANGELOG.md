@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0
+
+### 🎨 界面 / Design
+
+- 主题从「只换强调色」扩展到整个界面：浅色下页面底色、卡片与高亮底色、贴纸描边、硬投影和文字都随主题染色（薄荷是深绿、暖橘是深棕、地鼠天蓝是海军蓝、中性黑白是石墨黑）；深色下页面和卡片带一点主题色。三端同步 / A theme now colors the whole window, not only its accent: in the light, the page, card and highlight fills, sticker edges, hard shadows and text take its tones (deep green for mint, deep brown for orange, navy for sky, graphite for neutral); in the dark, the page and cards take a faint tint of it. On every platform
+- 「中性白」改名为「中性黑白」，与它黑色的强调色一致；页面底色改为不带蓝调的中性灰 / “中性白” is renamed “中性黑白” to match its black accent, and its page is a plain neutral grey rather than a bluish one
+
 ## 0.3.0
 
 首个公开版本：桌面端支持约 80 种格式互转，Android 与 iOS 改为纯原生应用，三端统一换上四套主题和 OLED 纯黑模式。/ The first public release: the desktop app converts between some 80 formats, Android and iOS become fully native apps, and every platform gets four themes and a pure-black OLED mode.

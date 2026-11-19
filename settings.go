@@ -37,17 +37,37 @@ type settings struct {
 	Reveal bool   `json:"reveal"` // the folder shows once a run is done
 }
 
-// accent is a color the user may choose for the app, flat as the icon's.
+// accent is a theme the user may choose for the app: a main color, flat as
+// the icon's, and the tones it gives the rest of the window.
 type accent struct {
 	id, name    string
 	light, dark ui.Color
+	day, night  tones
 }
 
+// tones are what a theme tints beyond its main color. In the light
+// appearance: the page, raised and highlighted fills, and the deep ink of
+// text, sticker edges and their hard shadows. In the dark one: the page and
+// the surfaces on it, faintly.
+type tones struct {
+	bg, panel, surface, raised, tint string
+	ink, muted, faint                string // light appearance only
+}
+
+// The same table is in Android's Theme.kt and iOS's Theme.swift.
 var accents = []accent{
-	{"mint", "薄荷", ui.Hex("#11996a"), ui.Hex("#3ccf9e")},
-	{"orange", "暖橘", ui.Hex("#e2681c"), ui.Hex("#ff9447")},
-	{"sky", "地鼠天蓝", ui.Hex("#1f7fe0"), ui.Hex("#5cb9f7")},
-	{"neutral", "中性白", ui.Hex("#1a1b1f"), ui.Hex("#ececee")},
+	{"mint", "薄荷", ui.Hex("#11996a"), ui.Hex("#3ccf9e"),
+		tones{bg: "#f0f7f3", raised: "#e5f4ec", tint: "#dbf0e5", ink: "#0b3626", muted: "#4f6b5f", faint: "#86a094"},
+		tones{bg: "#101614", panel: "#151c19", surface: "#19211e", raised: "#212b27", tint: "#1c3129"}},
+	{"orange", "暖橘", ui.Hex("#e2681c"), ui.Hex("#ff9447"),
+		tones{bg: "#fbf5f0", raised: "#fcebdf", tint: "#fbe2d0", ink: "#3d1d0a", muted: "#7a5c4a", faint: "#ab9283"},
+		tones{bg: "#161210", panel: "#1c1714", surface: "#211b17", raised: "#2b231e", tint: "#382619"}},
+	{"sky", "地鼠天蓝", ui.Hex("#1f7fe0"), ui.Hex("#5cb9f7"),
+		tones{bg: "#f2f6fc", raised: "#e9f3fe", tint: "#e3f2fe", ink: "#14213d", muted: "#56627e", faint: "#8e99b2"},
+		tones{bg: "#10141a", panel: "#151a21", surface: "#192027", raised: "#212933", tint: "#1c2c3b"}},
+	{"neutral", "中性黑白", ui.Hex("#1a1b1f"), ui.Hex("#ececee"),
+		tones{bg: "#f4f4f5", raised: "#ededee", tint: "#e7e7e9", ink: "#1a1b1f", muted: "#5f6168", faint: "#95979e"},
+		tones{bg: "#111214", panel: "#16171a", surface: "#1a1b1f", raised: "#222328", tint: "#24262b"}},
 }
 
 func accentByID(id string) accent {
@@ -191,11 +211,11 @@ func (a *formigo) dark(c *ui.Context) bool {
 func (a *formigo) palette(c *ui.Context) palette {
 	dark := a.dark(c)
 	a.darkNow = dark
-	p := paletteFor(dark)
+	ac := accentByID(a.prefs.Accent)
+	p := themed(paletteFor(dark), ac, dark)
 	if dark && a.prefs.OLED {
 		p = oled(p)
 	}
-	ac := accentByID(a.prefs.Accent)
 	p.accent = ac.light
 	if dark {
 		p.accent = ac.dark
@@ -207,6 +227,21 @@ func (a *formigo) palette(c *ui.Context) palette {
 	if contrast(p.accent, navy) > contrast(p.accent, p.accentInk) {
 		p.accentInk = navy
 	}
+	return p
+}
+
+// themed gives a palette its theme's tones.
+func themed(p palette, ac accent, dark bool) palette {
+	if dark {
+		t := ac.night
+		p.bg, p.panel, p.surface, p.raised = ui.Hex(t.bg), ui.Hex(t.panel), ui.Hex(t.surface), ui.Hex(t.raised)
+		p.skyTint = ui.Hex(t.tint)
+		return p
+	}
+	t := ac.day
+	p.bg, p.raised, p.skyTint = ui.Hex(t.bg), ui.Hex(t.raised), ui.Hex(t.tint)
+	p.outline, p.ink, p.muted, p.faint = ui.Hex(t.ink), ui.Hex(t.ink), ui.Hex(t.muted), ui.Hex(t.faint)
+	p.line, p.lineStrong = p.ink.Alpha(0.11), p.ink.Alpha(0.2)
 	return p
 }
 

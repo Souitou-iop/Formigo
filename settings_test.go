@@ -207,8 +207,9 @@ func TestOLED(t *testing.T) {
 	shot(t, m.tt, "02b-queue-oled")
 }
 
-// TestThemes: each theme, chosen in the settings, colors the dark window,
-// on graphite rather than navy.
+// TestThemes: each theme, chosen in the settings, colors the whole window,
+// not only its accent: in the dark, the page takes a faint tint of it; in the
+// light, the page and the ink of text and sticker edges do.
 func TestThemes(t *testing.T) {
 	_, files := samples(t)
 	for _, ac := range accents {
@@ -226,9 +227,15 @@ func TestThemes(t *testing.T) {
 		shot(t, tt, "30-theme-"+ac.id+"-settings")
 		var p palette
 		ui.NewTester(func(c *ui.Context) { p = a.palette(c) }, 10, 10).Frame()
-		if p.accent != ac.dark || p.bg != ui.Hex("#111214") {
+		if p.accent != ac.dark || p.bg != ui.Hex(ac.night.bg) {
 			t.Errorf("%s: accent %v, background %v", ac.id, p.accent, p.bg)
 		}
+		a.prefs.Appearance = "light"
+		ui.NewTester(func(c *ui.Context) { p = a.palette(c) }, 10, 10).Frame()
+		if p.accent != ac.light || p.bg != ui.Hex(ac.day.bg) || p.outline != ui.Hex(ac.day.ink) || p.ink != p.outline {
+			t.Errorf("%s light: accent %v, background %v, outline %v, ink %v", ac.id, p.accent, p.bg, p.outline, p.ink)
+		}
+		a.prefs.Appearance = "dark"
 		m := newPumped(t, 1040, 680)
 		m.a.prefs = a.prefs
 		m.a.add(files[:3])
