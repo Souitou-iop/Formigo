@@ -362,3 +362,67 @@ final class ThemeTests: XCTestCase {
         XCTAssertEqual(Accent.all.map(\.id), ["mint", "orange", "sky", "neutral"])
     }
 }
+
+// MARK: - Every source to every target
+
+/// Converts a sample of every format the app reads (testdata/seeds, shared
+/// with Android's device test) to every format it offers for it, on this
+/// device's own frameworks, and checks that what it wrote reads back.
+final class MatrixTests: XCTestCase {
+    func testEverySourceToEveryTarget() async throws {
+        let seeds = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+            .appendingPathComponent("testdata/seeds")
+        guard let names = try? FileManager.default.contentsOfDirectory(atPath: seeds.path) else {
+            throw XCTSkip("no samples at \(seeds.path)")
+        }
+        let dir = try tempDir()
+        var failures: [String] = []
+        var tried = 0
+        for name in names.sorted() {
+            let src = dir.appendingPathComponent(name)
+            try FileManager.default.copyItem(at: seeds.appendingPathComponent(name), to: src)
+            guard let source = Formats.source(for: src) else { continue }
+            for target in Formats.targets(for: source) {
+                tried += 1
+                do {
+                    let out = try await Engine.convert(src, to: target, into: dir.appendingPathComponent("\(source.id)-to-\(target)"), baseName: "seed")
+                    if let problem = await readBack(out, target) {
+                        failures.append("\(source.id) → \(target): \(problem)")
+                    }
+                } catch ConvertError.noAudioTrack where source.kind == .video {
+                    failures.append("\(source.id) → \(target): no audio track, though the sample has one")
+                } catch {
+                    failures.append("\(source.id) → \(target): \(error.localizedDescription)")
+                }
+            }
+        }
+        print("MATRIX: \(tried) conversions, \(failures.count) failed")
+        for f in failures { print("MATRIX FAIL: \(f)") }
+        XCTAssertTrue(failures.isEmpty, "\(failures.count) of \(tried) failed:\n" + failures.joined(separator: "\n"))
+    }
+
+    /// Why what was written does not read back, or nil when it does.
+    private func readBack(_ out: URL, _ target: String) async -> String? {
+        var isDir: ObjCBool = false
+        guard FileManager.default.fileExists(atPath: out.path, isDirectory: &isDir) else { return "nothing written" }
+        if isDir.boolValue {
+            let items = (try? FileManager.default.contentsOfDirectory(atPath: out.path)) ?? []
+            return items.isEmpty ? "empty folder" : nil
+        }
+        guard let data = try? Data(contentsOf: out), !data.isEmpty else { return "empty file" }
+        let media: Set<String> = ["mp4", "hevc", "mov", "m4a", "alac", "wav", "aiff", "caf"]
+        if Formats.imageUTIs[target] != nil {
+            guard let s = CGImageSourceCreateWithURL(out as CFURL, nil), CGImageSourceGetCount(s) > 0,
+                  CGImageSourceCreateImageAtIndex(s, 0, nil) != nil else { return "does not decode" }
+        } else if media.contains(target) {
+            let tracks = (try? await AVURLAsset(url: out).load(.tracks)) ?? []
+            if tracks.isEmpty { return "no tracks" }
+        } else if target == "pdf", PDFDocument(url: out) == nil {
+            return "not a PDF"
+        } else if target == "zip", data.prefix(2) != Data("PK".utf8) {
+            return "not a ZIP"
+        }
+        return nil
+    }
+}

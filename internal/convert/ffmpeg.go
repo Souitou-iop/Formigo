@@ -197,9 +197,9 @@ func videoArgs(to string, o Options) ([]string, error) {
 	case "webm":
 		switch e := encoder("libvpx-vp9", "libsvtav1", "libaom-av1", "libvpx"); e {
 		case "libvpx-vp9", "libvpx":
-			a = []string{"-c:v", e, "-crf", strconv.Itoa(max(15, min(50, 50-q*28/100))), "-b:v", "0", "-row-mt", "1", "-deadline", "good", "-cpu-used", "4"}
+			a = []string{"-c:v", e, "-crf", strconv.Itoa(max(15, min(50, 50-q*28/100))), "-b:v", "0", "-row-mt", "1", "-deadline", "good", "-cpu-used", "4", "-pix_fmt", "yuv420p"}
 		case "libsvtav1", "libaom-av1":
-			a = []string{"-c:v", e, "-crf", strconv.Itoa(max(20, min(55, 55-q*30/100)))}
+			a = []string{"-c:v", e, "-crf", strconv.Itoa(max(20, min(55, 55-q*30/100))), "-pix_fmt", "yuv420p"}
 		default:
 			return nil, errors.New("这个 FFmpeg 不能写 WebM 视频")
 		}

@@ -414,6 +414,11 @@ func (a *formigo) engines(c *ui.Context, p palette) {
 // formatRow chooses the format a kind converts to.
 func (a *formigo) formatRow(c *ui.Context, p palette, k convert.Kind, label string) {
 	targets := convert.KindTargets(k)
+	if len(targets) == 0 {
+		// Nothing converts these here: video and sound without FFmpeg.
+		row(c, p, label, func() { ui.Text(c, "不可用").FontSize(12.5).TextColor(p.faint) })
+		return
+	}
 	labels := make([]string, len(targets))
 	i := 0
 	for j, f := range targets {

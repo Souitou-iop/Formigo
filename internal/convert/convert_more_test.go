@@ -293,7 +293,17 @@ func TestNoNonsenseRoutes(t *testing.T) {
 			t.Errorf("png → %s through %v", to, plan("png")[to].through)
 		}
 	}
-	if !CanConvert("gif", "mp4") || !CanConvert("mov", "mp3") || !CanConvert("pdf", "txt") {
+	// A GIF becomes a video, but has no sound to become; a TrueType font
+	// cannot become OpenType.
+	for _, to := range []string{"mp3", "wav", "m4a"} {
+		if CanConvert("gif", to) {
+			t.Errorf("gif → %s through %v", to, plan("gif")[to].through)
+		}
+	}
+	if CanConvert("ttf", "otf") || CanConvert("otf", "ttf") {
+		t.Error("a font offered outlines it does not have")
+	}
+	if !CanConvert("gif", "mp4") || !CanConvert("gif", "webm") || !CanConvert("mov", "mp3") || !CanConvert("pdf", "txt") || !CanConvert("ttf", "woff") {
 		t.Error("real routes lost")
 	}
 }

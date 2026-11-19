@@ -16,7 +16,14 @@ import (
 // OpenType as its outlines are, and a font wraps as WOFF for the web.
 
 func init() {
-	register(&edge{engine: "font", from: []string{"ttf", "otf", "woff", "woff2"}, to: []string{"ttf", "otf", "woff"}, cost: 1, run: convertFont})
+	// TrueType outlines stay TrueType and CFF outlines OpenType: TTF and OTF
+	// files only wrap for the web; a web font unwraps to the one its
+	// outlines are.
+	register(
+		&edge{engine: "font", from: []string{"ttf"}, to: []string{"ttf", "woff"}, cost: 1, run: convertFont},
+		&edge{engine: "font", from: []string{"otf"}, to: []string{"otf", "woff"}, cost: 1, run: convertFont},
+		&edge{engine: "font", from: []string{"woff", "woff2"}, to: []string{"ttf", "otf", "woff"}, cost: 1, run: convertFont},
+	)
 }
 
 func convertFont(j *job) error {

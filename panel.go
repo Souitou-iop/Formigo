@@ -52,6 +52,9 @@ func (a *formigo) formatPicker(c *ui.Context, p palette, k convert.Kind, where s
 	chosen := a.kindTarget(k)
 	before := chosen
 	targets := a.kindTargets(k)
+	if len(targets) == 0 {
+		return
+	}
 	cols := 4
 	if len(targets) < 4 {
 		cols = len(targets)

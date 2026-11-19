@@ -520,6 +520,22 @@ func plan(from string) map[string]*route {
 		frontier = next
 	}
 	delete(best, from)
+	// Pictures have no sound: an animated GIF becomes a video, never what
+	// a video's sound track would be.
+	if f, ok := byID[from]; ok && f.Kind == Image {
+		for id := range best {
+			if byID[id].Kind == Audio {
+				delete(best, id)
+			}
+		}
+	}
+	// Nor do a font's outlines change, whatever it is wrapped in on the way.
+	switch from {
+	case "ttf":
+		delete(best, "otf")
+	case "otf":
+		delete(best, "ttf")
+	}
 	plans[from] = best
 	return best
 }

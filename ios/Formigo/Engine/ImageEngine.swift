@@ -27,7 +27,11 @@ enum ImageEngine {
             throw ConvertError.unreadable
         }
         switch id {
-        case "ico": image = squared(image, side: min(256, max(image.width, image.height)))
+        case "ico":
+            // ImageIO writes icons only of the standard sizes: the smallest that
+            // holds the picture, 256 at most.
+            let longest = max(image.width, image.height)
+            image = squared(image, side: [16, 32, 48, 64, 128, 256].first { $0 >= longest } ?? 256)
         case "icns": image = squared(image, side: 512)
         case "jpg", "bmp": image = flattened(image)
         default: break

@@ -30,8 +30,12 @@ struct OrbitHero: View {
                     .padding(-Self.bleed)
                 Group {
                     if settings.mascot {
-                        OrbitGopher(side: side, hops: boops, playful: !still)
+                        Image("Mascot")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: side, height: side)
                     } else {
+                        // Without the gopher, the convert mark as a sticker of its own.
                         Image(systemName: "arrow.triangle.2.circlepath")
                             .font(.system(size: side * 0.22, weight: .bold))
                             .foregroundStyle(p.accentInk)
@@ -39,6 +43,7 @@ struct OrbitHero: View {
                             .sticker(p.accent, radius: side * 0.14, lift: 6, width: 3)
                     }
                 }
+                .modifier(Hop(hops: boops, playful: !still))
                 .contentShape(Rectangle())
                 .onTapGesture(perform: boop)
                 .offset(y: -w * 0.02)
@@ -194,10 +199,9 @@ struct OrbitHero: View {
     }
 }
 
-/// The gopher of the hero: it hops when tapped, as the desktop's does: up
-/// for 170 ms, then a bouncing spring back down.
-private struct OrbitGopher: View, Equatable {
-    var side: CGFloat
+/// The hop of a tap on the hero, the gopher or the badge in its place, as
+/// the desktop's: up for 170 ms, then a bouncing spring back down.
+private struct Hop: ViewModifier {
     var hops: Int
     var playful: Bool
 
@@ -207,11 +211,8 @@ private struct OrbitGopher: View, Equatable {
         var scale: CGFloat = 1
     }
 
-    var body: some View {
-        Image("Mascot")
-            .resizable()
-            .scaledToFit()
-            .frame(width: side, height: side)
+    func body(content: Content) -> some View {
+        content
             .keyframeAnimator(initialValue: Pose(), trigger: playful ? hops : 0) { content, v in
                 content
                     .scaleEffect(v.scale, anchor: .bottom)

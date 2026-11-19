@@ -19,9 +19,14 @@ android {
         targetSdk = 36
         versionCode = 300
         versionName = "0.3.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
+        debug {
+            // Beside the release build on a device, not over it.
+            applicationIdSuffix = ".debug"
+        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
@@ -30,6 +35,9 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+
+    // The samples the device test converts, shared with iOS's tests.
+    sourceSets.getByName("androidTest").assets.directories.add("../../testdata")
 
     buildFeatures {
         compose = true
@@ -67,4 +75,7 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation(kotlin("test"))
+
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.ext.junit)
 }

@@ -73,7 +73,7 @@ jobs:
         run: tools/fetch-ffmpeg.sh ${{ matrix.ffmpeg }}
       - name: Test
         if: matrix.name == 'macOS'
-        run: go test ./...
+        run: FORMIGO_FFMPEG="$PWD/resources/darwin-arm64/bin/ffmpeg" go test ./...
       - name: Build
         # The disk image or installer where the runner can make it; the app
         # alone otherwise, which the next step packs.
@@ -118,7 +118,7 @@ jobs:
       - uses: gradle/actions/setup-gradle@v5
       - name: Test and build
         working-directory: android
-        run: ./gradlew --no-daemon testReleaseUnitTest assembleRelease
+        run: ./gradlew --no-daemon testDebugUnitTest assembleRelease
       - name: Upload
         env:
           GH_TOKEN: ${{ github.token }}

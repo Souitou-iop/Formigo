@@ -179,7 +179,9 @@ func TestOLED(t *testing.T) {
 	if tt.HasText("OLED 纯黑") {
 		t.Error("pure black offered in the light")
 	}
+	// Set behind the view's back, as no tap would: the next frame builds.
 	a.prefs.Appearance = "dark"
+	tt.Frame()
 	tt.Advance(time.Second)
 	sw, ok := tt.AccessByRole(ui.RoleSwitch, "OLED 纯黑")
 	if !ok {
@@ -238,4 +240,33 @@ func TestThemes(t *testing.T) {
 		h.tt.Advance(2 * time.Second)
 		shot(t, h.tt, "30-theme-"+ac.id+"-hero")
 	}
+}
+
+// TestWithoutFFmpeg: where there is no FFmpeg, video has no formats: the
+// settings say so, and movies are not taken.
+func TestWithoutFFmpeg(t *testing.T) {
+	convert.SetFFmpeg("")
+	t.Cleanup(func() {
+		for _, p := range []string{os.Getenv("FORMIGO_FFMPEG"), "/opt/homebrew/bin/ffmpeg", "/usr/local/bin/ffmpeg", "/usr/bin/ffmpeg"} {
+			if st, err := os.Stat(p); p != "" && err == nil && !st.IsDir() {
+				convert.SetFFmpeg(p)
+				return
+			}
+		}
+	})
+	a := newApp()
+	a.settingsPage = "convert"
+	tt := ui.NewTester(a.settingsView, 720, 560)
+	tt.Advance(time.Second)
+	if !tt.HasText("不可用") {
+		t.Errorf("video shows formats without FFmpeg: %q", tt.Texts())
+	}
+	dir := t.TempDir()
+	clip := filepath.Join(dir, "clip.mov")
+	os.WriteFile(clip, []byte("not really a movie"), 0o644)
+	m := newPumped(t, 1040, 680)
+	if added, skipped := m.a.add([]string{clip}); added != 0 || skipped != 1 {
+		t.Errorf("a movie without FFmpeg: added %d, skipped %d", added, skipped)
+	}
+	m.tt.Frame()
 }
