@@ -1,0 +1,820 @@
+<!doctype html>
+<html lang="zh-CN" data-om-signature="off" data-composition-variables='[
+  {"id":"tagline","type":"string","label":"结尾标语","default":"文件不上传，转换都在你的设备上完成。"},
+  {"id":"formats","type":"number","label":"格式数","default":80,"min":0,"max":999,"step":1},
+  {"id":"endHold","type":"number","label":"结尾停留（秒）","default":5.5,"min":0,"max":10,"step":0.1,"group":"节奏"}
+]'>
+<head>
+<meta charset="utf-8">
+<title>Formigo · 宣传片</title>
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/om.js"></script>
+<style id="om-fonts">
+@font-face { font-family: "Noto Sans SC"; src: url("assets/fonts/NotoSansSC-500.woff") format("woff"); font-weight: 500; font-style: normal; }
+@font-face { font-family: "Noto Sans SC"; src: url("assets/fonts/NotoSansSC-700.woff") format("woff"); font-weight: 700; font-style: normal; }
+@font-face { font-family: "Noto Sans SC"; src: url("assets/fonts/NotoSansSC-800.woff") format("woff"); font-weight: 800; font-style: normal; }
+@font-face { font-family: "Noto Sans SC"; src: url("assets/fonts/NotoSansSC-900.woff") format("woff"); font-weight: 900; font-style: normal; }
+@font-face { font-family: "Inter"; src: url("assets/fonts/Inter-var.woff") format("woff"); font-weight: 100 900; font-style: normal; }
+</style>
+<style>
+  :root { --bg:#F5F5F7; --card:#FFFFFF; --ink:#1D1D1F; --ink2:#6E6E73; --navy:#14213d; --sky:#5cb9f7;
+    --ease:cubic-bezier(0.25,0.1,0.25,1); }
+  html, body { margin:0; width:100%; height:100%; overflow:hidden; background:var(--bg); }
+  #film { position:relative; width:1920px; height:1080px; overflow:hidden; background:var(--bg); color:var(--ink);
+    font-family:"Inter","Noto Sans SC",sans-serif; font-weight:700; }
+  .scene { position:absolute; inset:0; opacity:0; }
+  #s-intro { opacity:1; }
+  .abs { position:absolute; }
+  .card { position:absolute; background:var(--card); border-radius:72px; overflow:hidden; }
+  .card.dark { background:#000; color:#fff; }
+  h1, h2, h3, p { margin:0; }
+  .h { font-family:"Noto Sans SC","Inter",sans-serif; font-weight:900; letter-spacing:-2px; line-height:1.12; color:var(--ink); }
+  .sub { font-family:"Noto Sans SC",sans-serif; font-weight:500; color:var(--ink2); }
+  .ln { display:block; overflow:hidden; padding-bottom:.08em; }
+  .ln > span { display:inline-block; }
+
+  /* gopher: every pose stacked, one visible at a time (draw() picks it) */
+  .gw { position:absolute; }
+  .gw .gin { position:absolute; inset:0; transform-origin:50% 97%; }
+  .gw .gpose { position:absolute; inset:0; width:100%; height:100%; opacity:0; display:block; }
+
+  /* sticker file cards: flat fill, navy outline, hard shadow (like the app's file tiles) */
+  .file { position:absolute; width:150px; height:184px; box-sizing:border-box; border:5px solid var(--navy); border-radius:26px;
+    background:color-mix(in srgb, var(--c) 13%, #fff); box-shadow:8px 8px 0 var(--navy);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; }
+  .file svg { width:70px; height:70px; }
+  .file b { font:900 31px/1 "Inter",sans-serif; letter-spacing:-.5px; color:color-mix(in srgb, var(--c) 72%, #14213d); }
+  .file i { font:800 22px/1 "Noto Sans SC",sans-serif; font-style:normal; color:color-mix(in srgb, var(--c) 72%, #14213d); }
+  .orb { position:absolute; left:0; top:0; }
+
+  /* intro */
+
+  .wordmark { font:900 210px/1 "Inter",sans-serif; letter-spacing:-9px; color:var(--ink); }
+  .grad { background:linear-gradient(100deg, #5cb9f7 0%, #2fb7a6 55%, #1fa874 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .pill { position:absolute; display:flex; align-items:center; gap:14px; padding:18px 30px; border-radius:999px; background:#fff;
+    border:5px solid var(--navy); box-shadow:6px 6px 0 var(--navy); font:800 34px/1 "Noto Sans SC","Inter",sans-serif; color:var(--navy); }
+  .bar { width:180px; height:16px; border-radius:8px; background:#e6e8ee; overflow:hidden; }
+  .bar > span { display:block; height:100%; width:37%; transform-origin:0 50%; background:#9aa3b5; border-radius:8px; }
+  .route { position:absolute; left:50%; top:930px; transform:translateX(-50%); display:flex; align-items:center; gap:18px;
+    font:900 46px/1 "Inter",sans-serif; color:var(--ink); background:#fff; padding:20px 40px; border-radius:999px; white-space:nowrap; }
+  .route em { font-style:normal; color:var(--ink2); font-weight:500; }
+  .shot { position:absolute; display:block; border-radius:22px; }
+  .tag { display:inline-block; padding:10px 22px; border-radius:999px; background:#F5F5F7; font:800 28px/1 "Inter",sans-serif; color:var(--ink); margin-right:10px; }
+    .arrow { position:absolute; height:8px; border-radius:4px; background:var(--navy); transform-origin:0 50%; }
+  .arrow::after { content:""; position:absolute; right:-6px; top:-10px; border-left:22px solid var(--navy); border-top:14px solid transparent; border-bottom:14px solid transparent; }
+  .theme .layer { position:absolute; inset:0; }
+  .theme .nm { position:absolute; left:44px; top:44px; font:900 52px/1.1 "Noto Sans SC",sans-serif; }
+  .theme .panel { position:absolute; left:32px; right:32px; top:136px; height:236px; border-radius:36px; }
+  .theme .stk { position:absolute; left:34px; top:40px; width:112px; height:138px; box-sizing:border-box; border:5px solid; border-radius:22px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; font:900 24px/1 "Inter",sans-serif; }
+  .theme .stk svg { width:54px; height:54px; }
+  .theme .arr { position:absolute; left:166px; top:96px; font:900 34px/1 "Inter",sans-serif; }
+  .theme .chip { position:absolute; left:212px; top:84px; padding:14px 18px; border-radius:18px; font:900 26px/1 "Inter",sans-serif; }
+  .theme .btn { position:absolute; left:32px; right:32px; bottom:40px; height:92px; border-radius:30px; display:flex; align-items:center; justify-content:center;
+    font:800 34px/1 "Noto Sans SC",sans-serif; }
+  /* demo: real screen recordings in bento cards, steps on the right */
+  .vcard { position:absolute; border-radius:36px; overflow:hidden; background:#fff; }
+  .vcard img, .vcard video { position:absolute; inset:0; width:100%; height:100%; display:block; }
+  .phone { position:absolute; border-radius:66px; background:#1D1D1F; }
+  .phone .vcard { border-radius:54px; }
+  .kick { display:inline-flex; align-items:center; gap:12px; padding:12px 24px 12px 18px; border-radius:999px; background:#fff; font:800 26px/1 "Noto Sans SC","Inter",sans-serif; color:#1D1D1F; }
+  .kick i { width:14px; height:14px; border-radius:50%; background:#e0436b; }
+  .steps { position:absolute; left:1230px; top:430px; width:626px; display:flex; flex-direction:column; gap:20px; }
+  .step { position:relative; background:#fff; border-radius:32px; padding:28px 30px 28px 106px; font:800 34px/1.3 "Noto Sans SC","Inter",sans-serif; color:#1D1D1F; opacity:.38; }
+  .step b { position:absolute; left:30px; top:50%; margin-top:-27px; width:54px; height:54px; border-radius:50%; background:#F5F5F7; font:900 28px/54px "Inter",sans-serif; text-align:center; color:#6E6E73; }
+  .step .hl { position:absolute; inset:0; border-radius:32px; box-shadow:inset 0 0 0 5px #14213d; opacity:0; z-index:1; }
+  .step .hl::after { content:""; position:absolute; left:30px; top:50%; margin-top:-27px; width:54px; height:54px; border-radius:50%; background:#14213d; }
+  .step .n2 { position:absolute; left:30px; top:50%; margin-top:-27px; width:54px; height:54px; font:900 28px/54px "Inter",sans-serif; text-align:center; color:#fff; z-index:2; opacity:0; }
+  .dots { display:flex; gap:14px; margin-top:14px; position:relative; }
+  .dots span { width:34px; height:34px; border-radius:50%; }
+  .dots .ring { position:absolute; left:-6px; top:-6px; width:46px; height:46px; border-radius:50%; box-shadow:inset 0 0 0 4px #14213d; background:transparent; }
+  .ping { position:absolute; width:96px; height:96px; margin:-48px 0 0 -48px; border-radius:50%; box-shadow:inset 0 0 0 7px #5cb9f7; }
+  .cloud { position:absolute; width:250px; height:170px; }
+  .strike { position:absolute; height:14px; border-radius:7px; background:var(--navy); transform-origin:0 50%; }
+</style>
+</head>
+<body>
+<div id="film" data-composition-id="film" data-width="1920" data-height="1080">
+  <audio id="om-sound" src="assets/sound.wav" data-start="0" data-duration="120.3" data-track-index="8" data-volume="1"></audio>
+
+  <!-- 1 · intro: out of the hole -->
+  <section class="scene" id="s-intro" data-om-id="intro">
+    <div class="card" id="introCard" style="left:40px;top:40px;width:1840px;height:1000px;" data-om-id="intro-card"></div>
+    <div class="gw" id="gIntro" style="left:300px;top:320px;width:480px;height:480px;z-index:8" data-om-id="gopher-intro"></div>
+    <div id="introOrbit"></div>
+    <div class="abs" style="left:1010px;top:300px;width:860px;">
+      <span class="ln wordmark" data-om-id="wordmark"><span>Formigo</span></span>
+      <h1 class="h" style="font-size:84px;margin-top:56px;" data-om-id="intro-line"><span class="ln"><span>把文件丢给小地鼠。</span></span></h1>
+      <p class="sub" style="font-size:38px;margin-top:26px;" data-om-id="intro-sub"><span class="ln"><span>图片、视频、音频、文档、数据，本机互转</span></span></p>
+    </div>
+  </section>
+
+  <!-- 2 · chaos -->
+  <section class="scene" id="s-chaos" data-om-id="chaos">
+    <div id="chaosFiles"></div>
+    <div class="gw" id="gChaos" style="left:730px;top:170px;width:460px;height:460px;z-index:5" data-om-id="gopher-chaos"></div>
+    <div class="pill" id="upload" style="left:1180px;top:250px;z-index:6" data-om-id="upload">
+      <svg width="44" height="44" viewBox="0 0 48 48"><path d="M14 36h22a9 9 0 0 0 0-18 13 13 0 0 0-25 3 7.5 7.5 0 0 0 3 15z" fill="#fff" stroke="#14213d" stroke-width="4" stroke-linejoin="round"/><path d="M24 33V22m-5 5 5-5 5 5" fill="none" stroke="#14213d" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      上传中<span class="bar"><span></span></span>
+    </div>
+    <h2 class="h abs" id="chaosA" style="left:0;width:1920px;top:770px;text-align:center;font-size:100px;" data-om-id="chaos-a">
+      <span class="ln"><span>格式太多，工具太杂。</span></span></h2>
+    <h2 class="h abs" id="chaosB" style="left:0;width:1920px;top:770px;text-align:center;font-size:100px;" data-om-id="chaos-b">
+      <span class="ln"><span>还要先传到网上？</span></span></h2>
+  </section>
+
+  <!-- 3 · feed the gopher -->
+  <section class="scene" id="s-feed" data-om-id="feed">
+    <h2 class="h abs" style="left:0;width:1920px;top:70px;text-align:center;font-size:104px;" data-om-id="feed-title"><span class="ln"><span>把文件丢给小地鼠。</span></span></h2>
+    <svg class="abs" style="left:560px;top:520px" width="800" height="260" viewBox="0 0 800 260"><ellipse id="ring" cx="400" cy="130" rx="380" ry="110" fill="none" stroke="#5cb9f7" stroke-width="6" stroke-dasharray="4 22" stroke-linecap="round"/></svg>
+    <div id="feedFiles"></div>
+    <div class="gw" id="gFeed" style="left:740px;top:240px;width:440px;height:440px;z-index:5" data-om-id="gopher-feed"></div>
+    <div id="routes"></div>
+  </section>
+
+  <!-- 4 · demo: the real app, recorded -->
+  <section class="scene" id="s-demo" data-om-id="demo">
+    <div class="card" id="demoCard" style="left:40px;top:40px;width:1840px;height:1000px;"></div>
+    <div class="gw" id="gDemo" style="left:250px;top:250px;width:580px;height:580px;"></div>
+    <div class="abs" style="left:900px;top:330px;width:960px;">
+      <h2 class="h" style="font-size:150px;letter-spacing:-6px;white-space:nowrap;"><span class="ln"><span>实际用一遍。</span></span></h2>
+      <div id="demoTags" style="margin-top:48px;display:flex;gap:16px;"><span class="tag" style="font-size:32px;padding:14px 28px;font-family:'Noto Sans SC';">桌面端</span><span class="tag" style="font-size:32px;padding:14px 28px;font-family:'Noto Sans SC';">移动端</span><span class="tag" style="font-size:32px;padding:14px 28px;font-family:'Noto Sans SC';">实机录屏</span></div>
+    </div>
+  </section>
+
+  <section class="scene" id="s-d1" data-om-id="demo-batch">
+    <div class="vcard" id="vc1" style="left:64px;top:90px;width:1118px;height:900px;"><img src="assets/rec/desk-batch-last.jpg" alt="">
+      <video id="v1" data-start="25.5" data-duration="6.9" data-media-start="0" data-track-index="1" muted playsinline src="assets/rec/desk-batch.mp4"></video></div>
+    <div class="abs" style="left:1230px;top:118px;width:626px;"><span class="kick"><i></i>录屏 · 桌面端</span>
+      <h2 class="h" style="font-size:56px;margin-top:34px;white-space:nowrap;"><span class="ln"><span>一次丢进七个文件。</span></span></h2></div>
+    <div class="steps" id="st1"><div class="step"><div class="hl"></div><b>1</b><span class="n2">1</span><span>拖进窗口，按类型自动分组</span></div><div class="step"><div class="hl"></div><b>2</b><span class="n2">2</span><span>图片组选目标格式：WebP</span></div><div class="step"><div class="hl"></div><b>3</b><span class="n2">3</span><span>一键转换，七个全部完成</span></div></div>
+    <div class="gw" id="gD1" style="left:1650px;top:830px;width:220px;height:220px;"></div>
+  </section>
+
+  <section class="scene" id="s-d2" data-om-id="demo-all">
+    <div class="vcard" id="vc2" style="left:64px;top:90px;width:1118px;height:900px;"><img src="assets/rec/desk-all-last.jpg" alt="">
+      <video id="v2" data-start="31.5" data-duration="12.23" data-media-start="0" data-track-index="1" muted playsinline src="assets/rec/desk-all.mp4"></video><div class="ping" id="ping2" style="left:1046px;top:824px;"></div></div>
+    <div class="abs" style="left:1230px;top:118px;width:626px;"><span class="kick"><i></i>录屏 · 桌面端</span>
+      <h2 class="h" style="font-size:56px;margin-top:34px;white-space:nowrap;"><span class="ln"><span>种类不同，也能一起转。</span></span></h2></div>
+    <div class="steps" id="st2"><div class="step"><div class="hl"></div><b>1</b><span class="n2">1</span><span>图片和 PDF 混在一起</span></div><div class="step"><div class="hl"></div><b>2</b><span class="n2">2</span><span>「全部转为」一次选好 JPG</span></div><div class="step"><div class="hl"></div><b>3</b><span class="n2">3</span><span>完成后 ↗ 打开所在文件夹</span></div></div>
+    <div class="gw" id="gD2" style="left:1650px;top:830px;width:220px;height:220px;"></div>
+  </section>
+
+  <section class="scene" id="s-d5" data-om-id="demo-options">
+    <div class="vcard" id="vc5" style="left:64px;top:90px;width:1118px;height:900px;"><img src="assets/rec/desk-opts-last.jpg" alt="">
+      <video id="v5" data-start="45" data-duration="10.8" data-media-start="0" data-track-index="1" muted playsinline src="assets/rec/desk-opts.mp4"></video></div>
+    <div class="abs" style="left:1230px;top:118px;width:626px;"><span class="kick"><i></i>录屏 · 桌面端</span>
+      <h2 class="h" style="font-size:56px;margin-top:34px;white-space:nowrap;"><span class="ln"><span>选项跟着格式走。</span></span></h2></div>
+    <div class="steps" id="st5"><div class="step"><div class="hl"></div><b>1</b><span class="n2">1</span><span>PNG：只需要选尺寸</span></div><div class="step"><div class="hl"></div><b>2</b><span class="n2">2</span><span>JPG：多出画质滑块</span></div><div class="step"><div class="hl"></div><b>3</b><span class="n2">3</span><span>ICO：没什么可调，就不显示</span></div></div>
+    <div class="gw" id="gD5" style="left:1650px;top:830px;width:220px;height:220px;"></div>
+  </section>
+
+  <section class="scene" id="s-d3" data-om-id="demo-themes">
+    <div class="vcard" id="vc3" style="left:64px;top:130px;width:1109px;height:820px;"><img src="assets/rec/desk-themes-last.jpg" alt="">
+      <video id="v3" data-start="55" data-duration="17.33" data-media-start="0" data-track-index="1" muted playsinline src="assets/rec/desk-themes.mp4"></video></div>
+    <div class="abs" style="left:1230px;top:118px;width:626px;"><span class="kick"><i></i>录屏 · 桌面端</span>
+      <h2 class="h" style="font-size:56px;margin-top:34px;white-space:nowrap;"><span class="ln"><span>换个颜色，换个心情。</span></span></h2></div>
+    <div class="steps" id="st3"><div class="step"><div class="hl"></div><b>1</b><span class="n2">1</span><span>四套主题，整个窗口一起换色</span><div class="dots"><span style="background:#3CCF9E"></span><span style="background:#FF9447"></span><span style="background:#5CB9F7"></span><span style="background:#1A1B1F"></span><span class="ring"></span></div></div><div class="step"><div class="hl"></div><b>2</b><span class="n2">2</span><span>默认：中性黑白</span></div><div class="step"><div class="hl"></div><b>3</b><span class="n2">3</span><span>浅色、深色都适配</span></div></div>
+    <div class="gw" id="gD3" style="left:1650px;top:830px;width:220px;height:220px;"></div>
+  </section>
+
+  <section class="scene" id="s-d4" data-om-id="demo-ios">
+    <div class="phone" id="ph4" style="left:399px;top:68px;width:448px;height:944px;">
+      <div class="vcard" id="vc4" style="left:12px;top:12px;width:424px;height:920px;"><img src="assets/rec/ios-flow-last.jpg" alt="">
+      <video id="v4" data-start="72.5" data-duration="16.2" data-media-start="0" data-track-index="1" muted playsinline src="assets/rec/ios-flow.mp4"></video></div>
+    </div>
+    <div class="abs" style="left:1230px;top:118px;width:626px;"><span class="kick"><i></i>录屏 · 移动端</span>
+      <h2 class="h" style="font-size:56px;margin-top:34px;white-space:nowrap;"><span class="ln"><span>手机上也一样。</span></span></h2></div>
+    <div class="steps" id="st4"><div class="step"><div class="hl"></div><b>1</b><span class="n2">1</span><span>从相册选两张照片</span></div><div class="step"><div class="hl"></div><b>2</b><span class="n2">2</span><span>选 JPG，一键转换</span></div><div class="step"><div class="hl"></div><b>3</b><span class="n2">3</span><span>转好直接分享</span></div></div>
+    <div class="gw" id="gD4" style="left:1650px;top:830px;width:220px;height:220px;"></div>
+  </section>
+
+  <!-- 5 · bento -->
+  <section class="scene" id="s-bento" data-om-id="bento">
+    <div id="bentoWorld" class="abs" style="left:0;top:0;width:1920px;height:1600px;">
+      <div class="card" id="bA" style="left:64px;top:64px;width:880px;height:952px;" data-om-id="b-formats">
+        <div class="abs" style="left:72px;top:70px;">
+          <div class="grad" style="font:900 330px/1 Inter,sans-serif;letter-spacing:-16px;font-variant-numeric:tabular-nums;" id="fmtNum">80+</div>
+          <h3 class="h" style="font-size:72px;margin-top:10px;">种格式，</h3>
+          <h3 class="h" style="font-size:72px;">本机互转。</h3>
+        </div>
+        <div class="gw" id="gJuggle" style="left:440px;top:520px;width:400px;height:400px;z-index:3"></div>
+      </div>
+      <div class="card" id="bB" style="left:976px;top:64px;width:880px;height:460px;" data-om-id="b-kinds">
+        <h3 class="h abs" style="left:56px;top:52px;font-size:72px;">8 大类。</h3>
+        <div id="kinds"></div>
+      </div>
+      <div class="card" id="bC" style="left:976px;top:556px;width:424px;height:460px;" data-om-id="b-platforms">
+        <div class="abs" style="left:52px;top:40px;display:flex;align-items:baseline;gap:10px;">
+          <span id="platNum" style="font:900 230px/1 Inter,sans-serif;letter-spacing:-8px;">5</span>
+          <span class="h" style="font-size:52px;">个平台</span></div>
+        <p class="sub abs" style="left:56px;top:330px;font-size:27px;line-height:1.6;white-space:nowrap;">macOS · Windows · Linux<br>Android · iOS</p>
+      </div>
+      <div class="card dark" id="bD" style="left:1432px;top:556px;width:424px;height:460px;" data-om-id="b-engines">
+        <p class="abs" style="left:52px;top:58px;font:800 32px/1 'Noto Sans SC';color:#a1a1a6;">内置</p>
+        <p class="abs" style="left:50px;top:118px;font:900 80px/1.15 Inter;letter-spacing:-3px;">FFmpeg<br>PDFium</p>
+        <p class="abs" style="left:52px;top:350px;font:800 40px/1 'Noto Sans SC';">无需另装。</p>
+      </div>
+      <div class="card" id="bE" style="left:64px;top:1048px;width:1792px;height:460px;" data-om-id="b-route">
+        <h3 class="h abs" style="left:72px;top:110px;font-size:72px;">一步转不了？<br>自动规划路线。</h3>
+        <div id="routeChips"></div>
+        <div class="arrow" id="ar1" style="left:1046px;top:124px;width:110px;"></div>
+        <div class="arrow" id="ar2" style="left:1346px;top:124px;width:110px;"></div>
+        <div class="abs" style="left:800px;top:436px;width:920px;height:6px;border-radius:3px;background:#e6e8ee;"></div>
+        <div id="surfer" class="abs" style="left:0;top:0;">
+          <div class="gw" id="gSurf" style="left:-35px;top:212px;width:230px;height:230px;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · privacy -->
+  <section class="scene" id="s-priv" data-om-id="privacy">
+    <div class="card" id="privCard" style="left:64px;top:64px;width:1792px;height:952px;" data-om-id="priv-card">
+      <div class="gw" id="gShield" style="left:170px;top:150px;width:600px;height:600px;"></div>
+      <div class="abs" style="left:860px;top:300px;width:920px;">
+        <h2 class="h" style="font-size:136px;letter-spacing:-5px;white-space:nowrap;" data-om-id="priv-title"><span class="ln"><span>文件不上传。</span></span></h2>
+        <p class="sub" style="font-size:40px;margin-top:34px;line-height:1.5;" data-om-id="priv-sub"><span class="ln"><span>视频、音频用内置 FFmpeg，</span></span><span class="ln"><span>PDF 用内置 PDFium。</span></span></p>
+      </div>
+      <div class="cloud" id="cloud" style="left:1460px;top:70px;">
+        <svg width="250" height="170" viewBox="0 0 250 170"><path d="M62 150h126a46 46 0 0 0 0-92 66 66 0 0 0-126 14 39 39 0 0 0 0 78z" fill="#fff" stroke="#14213d" stroke-width="10" stroke-linejoin="round"/><path d="M125 128V78m-24 22 24-24 24 24" fill="none" stroke="#14213d" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="strike" id="strike" style="left:-10px;top:150px;width:290px;transform:rotate(-32deg);"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · platforms, then themes -->
+  <section class="scene" id="s-plat" data-om-id="platforms">
+    <h2 class="h abs" id="platA" style="left:72px;top:58px;font-size:80px;" data-om-id="plat-title"><span class="ln"><span>五个平台，三种语言，统一设计。</span></span></h2>
+    <h2 class="h abs" id="platB" style="left:72px;top:58px;font-size:80px;" data-om-id="theme-title"><span class="ln"><span>四套主题，整页换色。</span></span></h2>
+    <div class="gw" id="gLaptop" style="left:1650px;top:14px;width:190px;height:190px;"></div>
+    <div class="card" id="pDesk" style="left:64px;top:220px;width:1000px;height:796px;" data-om-id="p-desktop">
+      <div class="abs" style="left:50px;top:52px;"><span class="tag">macOS</span><span class="tag">Windows</span><span class="tag">Linux</span></div>
+      <img class="shot" src="assets/img/desktop-hero-light.png" style="left:50px;top:150px;width:900px;height:588px;border:2px solid #ececf0;" alt="">
+      <img class="shot" id="deskDark" src="assets/img/desktop-hero-dark.png" style="left:50px;top:150px;width:900px;height:588px;border:2px solid #ececf0;opacity:0" alt="">
+    </div>
+    <div class="card" id="pAnd" style="left:1096px;top:220px;width:364px;height:796px;" data-om-id="p-android">
+      <div class="abs" style="left:40px;top:52px;"><span class="tag">Android</span></div>
+      <img class="shot" src="assets/img/android-neutral.jpg" style="left:19px;top:150px;width:326px;height:580px;border-radius:30px;object-fit:contain;background:#f2f5fc;" alt="">
+      <img class="shot" id="andDark" src="assets/img/android-home.png" style="left:19px;top:150px;width:326px;height:580px;border-radius:30px;opacity:0" alt="">
+    </div>
+    <div class="card" id="pIos" style="left:1492px;top:220px;width:364px;height:796px;" data-om-id="p-ios">
+      <div class="abs" style="left:40px;top:52px;"><span class="tag">iOS</span></div>
+      <img class="shot" src="assets/img/ios-neutral.png" style="left:48px;top:150px;width:267px;height:580px;border-radius:30px;" alt="">
+      <img class="shot" id="iosDark" src="assets/img/ios-neutral-dark.png" style="left:48px;top:150px;width:267px;height:580px;border-radius:30px;opacity:0" alt="">
+    </div>
+    <div id="themes"></div>
+    <div class="gw" id="gHop" style="left:0;top:0;width:230px;height:230px;z-index:4"></div>
+  </section>
+
+  <!-- 8 · end -->
+  <section class="scene" id="s-end" data-om-id="end">
+    <div class="gw" id="gCheer" style="left:750px;top:70px;width:420px;height:420px;" data-om-id="gopher-end"></div>
+    <div class="abs" id="endMark" style="left:0;top:560px;width:1920px;display:flex;justify-content:center;align-items:center;gap:36px;" data-om-id="end-mark">
+      <img src="assets/img/formigo-icon.png" style="width:170px;height:170px;" alt="Formigo">
+      <span class="wordmark" style="font-size:170px;letter-spacing:-7px;">Formigo</span>
+    </div>
+    <h2 class="h abs" style="left:0;width:1920px;top:790px;text-align:center;font-size:58px;letter-spacing:-1px;" data-om-id="tagline"><span class="ln"><span data-var-text="tagline">文件不上传，转换都在你的设备上完成。</span></span></h2>
+    <p class="sub abs" style="left:0;width:1920px;top:892px;text-align:center;font-size:32px;" data-om-id="end-sub"><span class="ln"><span>macOS · Windows · Linux · Android · iOS</span></span></p>
+  </section>
+</div>
+
+<script type="text/vnd.abc" id="om-score">
+X:1
+T:Formigo · gopher pocket
+M:4/4
+L:1/8
+Q:1/4=120
+K:F
+V:MEL inst=marimba role=melody gain=0.9
+[M:4/4] !mp! F2 A2 c2 f2 | [M:4/4] d2 c2 A2 F2 | [M:4/4] G2 A2 c2 e2 | [M:4/4] !mf! D/F/A/d/ D/F/A/d/ D/F/A/d/ D/F/A/d/ |
+[M:4/4] B,/D/F/B/ B,/D/F/B/ B,/D/F/B/ B,/D/F/B/ | [M:4/4] C/E/G/c/ C/E/G/c/ C/E/G/c/ z2 | [M:4/4] !f! F/A/c/f/ a2 g f c2 | [M:4/4] D/F/A/d/ f2 e d A2 |
+[M:4/4] B,/D/F/B/ d2 c B F2 | [M:4/4] C/E/G/c/ e2 g2 c2 | [M:2/4] G2 A2 | [M:4/4] !mp! F2 A2 c2 f2 |
+[M:4/4] G2 A2 c2 e2 | [M:4/4] !mf! c2 z2 A2 z2 | [M:4/4] z8 | [M:4/4] d2 z2 c2 z2 |
+[M:4/4] z8 | [M:4/4] c2 A2 F2 A2 | [M:4/4] d2 A2 F4 | [M:4/4] d2 f2 d2 B2 |
+[M:4/4] G2 A2 c4 | [M:4/4] c2 z2 A2 z2 | [M:4/4] z8 | [M:4/4] d2 z2 c2 z2 |
+[M:4/4] z8 | [M:4/4] A2 c2 f2 e2 | [M:4/4] e2 c2 A4 | [M:4/4] A2 c2 f2 e2 |
+[M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] c2 A2 F2 A2 | [M:4/4] d2 A2 F4 | [M:4/4] d2 f2 d2 B2 |
+[M:4/4] G2 A2 c4 | [M:4/4] A2 c2 f2 e2 | [M:4/4] e2 c2 A4 | [M:4/4] B,/D/F/B/ B,/D/F/B/ B,/D/F/B/ B,/D/F/B/ |
+[M:4/4] C/E/G/c/ C/E/G/c/ C/E/G/c/ z2 | [M:4/4] !f! F/A/c/f/ a2 g f c2 | [M:4/4] D/F/A/d/ f2 e d A2 | [M:4/4] B,/D/F/B/ d2 c B F2 |
+[M:4/4] C/E/G/c/ e2 g2 c2 | [M:4/4] F/A/c/f/ a2 g f z2 | [M:4/4] !p! c2 z2 A2 z2 | [M:4/4] z8 |
+[M:4/4] d2 c2 A2 F2 | [M:4/4] !mf! c2 A2 F2 A2 | [M:4/4] d2 A2 F4 | [M:4/4] d2 f2 d2 B2 |
+[M:4/4] G2 A2 c4 | [M:1/4] z2 | [M:4/4] !f! F2 A2 c2 f2 | [M:4/4] !fermata!f8 |
+[M:4/4] z8 |
+V:GLK inst=glock transpose=12 gain=0.35
+[M:4/4] !mp! F2 A2 c2 f2 | [M:4/4] d2 c2 A2 F2 | [M:4/4] G2 A2 c2 e2 | [M:4/4] !mf! z8 |
+[M:4/4] z8 | [M:4/4] z8 | [M:4/4] !f! F/A/c/f/ a2 g f c2 | [M:4/4] D/F/A/d/ f2 e d A2 |
+[M:4/4] B,/D/F/B/ d2 c B F2 | [M:4/4] C/E/G/c/ e2 g2 c2 | [M:2/4] G2 A2 | [M:4/4] !mp! F2 A2 c2 f2 |
+[M:4/4] z8 | [M:4/4] !mf! z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 | [M:4/4] B,/D/F/B/ B,/D/F/B/ B,/D/F/B/ B,/D/F/B/ |
+[M:4/4] C/E/G/c/ C/E/G/c/ C/E/G/c/ z2 | [M:4/4] !f! F/A/c/f/ a2 g f c2 | [M:4/4] D/F/A/d/ f2 e d A2 | [M:4/4] B,/D/F/B/ d2 c B F2 |
+[M:4/4] C/E/G/c/ e2 g2 c2 | [M:4/4] F/A/c/f/ a2 g f z2 | [M:4/4] !p! z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] !mf! z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:1/4] z2 | [M:4/4] !f! F2 A2 c2 f2 | [M:4/4] !fermata!f8 |
+[M:4/4] z8 |
+V:VIB inst=vibes gain=0.6
+[M:4/4] !mp! z8 | [M:4/4] z8 | [M:4/4] z8 | [M:4/4] !mf! z8 |
+[M:4/4] z8 | [M:4/4] z8 | [M:4/4] !f! z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] z8 | [M:2/4] z4 | [M:4/4] !mp! z8 |
+[M:4/4] z8 | [M:4/4] !mf! z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] A2 c2 f2 e2 | [M:4/4] e2 c2 A4 | [M:4/4] B2 d2 f2 d2 | [M:4/4] c2 B2 A2 G2 |
+[M:4/4] A2 c2 f2 e2 | [M:4/4] e2 c2 A4 | [M:4/4] B2 d2 f2 d2 | [M:4/4] c2 B2 A2 G2 |
+[M:4/4] A2 c2 f2 e2 | [M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] !f! z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] z8 | [M:4/4] !p! z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] !mf! z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:1/4] z2 | [M:4/4] !f! z8 | [M:4/4] z8 |
+[M:4/4] z8 |
+V:UKE inst=uke gain=0.55
+[M:4/4] !mp! z8 | [M:4/4] z8 | [M:4/4] z8 | [M:4/4] !mf! z[DFAd] z[DFAd] z[DFAd] z[DFAd] |
+[M:4/4] z[DFBd] z[DFBd] z[DFBd] z[DFBd] | [M:4/4] z[EGce] z[EGce] z[EGce] z2 | [M:4/4] !f! z[FAcf] z[FAcf] z[FAcf] z[FAcf] | [M:4/4] z[DFAd] z[DFAd] z[DFAd] z[DFAd] |
+[M:4/4] z[DFBd] z[DFBd] z[DFBd] z[DFBd] | [M:4/4] z[EGce] z[EGce] z[EGce] z[EGce] | [M:2/4] z[EGce] z[EGce] | [M:4/4] !mp! z8 |
+[M:4/4] z8 | [M:4/4] !mf! z[FAcf] z[FAcf] z[FAcf] z[FAcf] | [M:4/4] z[EAce] z[EAce] z[EAce] z[EAce] | [M:4/4] z[DFBd] z[DFBd] z[DFBd] z[DFBd] |
+[M:4/4] z[EGce] z[EGce] z[EGce] z[EGce] | [M:4/4] z[FAcf] z[FAcf] z[FAcf] z[FAcf] | [M:4/4] z[EAce] z[EAce] z[EAce] z[EAce] | [M:4/4] z[DFBd] z[DFBd] z[DFBd] z[DFBd] |
+[M:4/4] z[EGce] z[EGce] z[EGce] z[EGce] | [M:4/4] z[FAcf] z[FAcf] z[FAcf] z[FAcf] | [M:4/4] z[EAce] z[EAce] z[EAce] z[EAce] | [M:4/4] z[DFBd] z[DFBd] z[DFBd] z[DFBd] |
+[M:4/4] z[EGce] z[EGce] z[EGce] z[EGce] | [M:4/4] z[FAcf] z[FAcf] z[FAcf] z[FAcf] | [M:4/4] z[EAce] z[EAce] z[EAce] z[EAce] | [M:4/4] z[DFBd] z[DFBd] z[DFBd] z[DFBd] |
+[M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] z[FAcf] z[FAcf] z[FAcf] z[FAcf] | [M:4/4] z[DFAd] z[DFAd] z[DFAd] z[DFAd] | [M:4/4] z[DFBd] z[DFBd] z[DFBd] z[DFBd] |
+[M:4/4] z[EGce] z[EGce] z[EGce] z[EGce] | [M:4/4] z[FAcf] z[FAcf] z[FAcf] z[FAcf] | [M:4/4] z[DFAd] z[DFAd] z[DFAd] z[DFAd] | [M:4/4] z[DFBd] z[DFBd] z[DFBd] z[DFBd] |
+[M:4/4] z[EGce] z[EGce] z[EGce] z2 | [M:4/4] !f! z[FAcf] z[FAcf] z[FAcf] z[FAcf] | [M:4/4] z[DFAd] z[DFAd] z[DFAd] z[DFAd] | [M:4/4] z[DFBd] z[DFBd] z[DFBd] z[DFBd] |
+[M:4/4] z[EGce] z[EGce] z[EGce] z[EGce] | [M:4/4] z[FAcf] z[FAcf] z[FAcf] z2 | [M:4/4] !p! z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] !mf! z[FAcf] z[FAcf] z[FAcf] z[FAcf] | [M:4/4] z[EAce] z[EAce] z[EAce] z[EAce] | [M:4/4] z[DFBd] z[DFBd] z[DFBd] z[DFBd] |
+[M:4/4] z[EGce] z[EGce] z[EGce] z[EGce] | [M:1/4] z2 | [M:4/4] !f! z[FAcf] z[FAcf] z[FAcf] z[FAcf] | [M:4/4] z8 |
+[M:4/4] z8 |
+V:PZ inst=pizz gain=0.5
+[M:4/4] !mp! z8 | [M:4/4] z8 | [M:4/4] z8 | [M:4/4] !mf! z8 |
+[M:4/4] z8 | [M:4/4] z8 | [M:4/4] !f! z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] z8 | [M:2/4] z4 | [M:4/4] !mp! z8 |
+[M:4/4] z8 | [M:4/4] !mf! z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] B,,D,FD, B,,D,FD, | [M:4/4] C,E,GE, C,E,GE, | [M:4/4] A,,C,EC, A,,C,EC, | [M:4/4] D,F,AF, D,F,AF, |
+[M:4/4] B,,D,FD, B,,D,FD, | [M:4/4] C,E,GE, C,E,GE, | [M:4/4] A,,C,EC, A,,C,EC, | [M:4/4] D,F,AF, D,F,AF, |
+[M:4/4] B,,D,FD, B,,D,FD, | [M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] !f! z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] z8 | [M:4/4] !p! z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] !mf! z8 | [M:4/4] z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:1/4] z2 | [M:4/4] !f! z8 | [M:4/4] z8 |
+[M:4/4] z8 |
+V:PAD inst=warmpad gain=0.4
+[M:4/4] !mark:intro! !mp! [FAc]8 | [M:4/4] [DFB]8 | [M:4/4] [EGc]8 | [M:4/4] !mark:chaos! !mf! [DFA]8 |
+[M:4/4] [DFB]8 | [M:4/4] [EGc]8 | [M:4/4] !mark:feed! !f! [FAc]8 | [M:4/4] [DFA]8 |
+[M:4/4] [DFB]8 | [M:4/4] [EGc]8 | [M:2/4] [EGc]4 | [M:4/4] !mark:demo! !mp! [FAc]8 |
+[M:4/4] [EGc]8 | [M:4/4] !mark:d1! !mf! [FAc]8 | [M:4/4] [EAc]8 | [M:4/4] [DFB]8 |
+[M:4/4] [EGc]8 | [M:4/4] [FAc]8 | [M:4/4] [EAc]8 | [M:4/4] [DFB]8 |
+[M:4/4] [EGc]8 | [M:4/4] [FAc]8 | [M:4/4] [EAc]8 | [M:4/4] [DFB]8 |
+[M:4/4] [EGc]8 | [M:4/4] [FAc]8 | [M:4/4] [EAc]8 | [M:4/4] [DFB]8 |
+[M:4/4] !mark:d3! [DFB]8 | [M:4/4] [EGc]8 | [M:4/4] [EAc]8 | [M:4/4] [DFA]8 |
+[M:4/4] [DFB]8 | [M:4/4] [EGc]8 | [M:4/4] [EAc]8 | [M:4/4] [DFA]8 |
+[M:4/4] [DFB]8 | [M:4/4] !mark:d4! [FAc]8 | [M:4/4] [DFA]8 | [M:4/4] [DFB]8 |
+[M:4/4] [EGc]8 | [M:4/4] [FAc]8 | [M:4/4] [DFA]8 | [M:4/4] [DFB]8 |
+[M:4/4] [EGc]8 | [M:4/4] !mark:bento! !f! [FAc]8 | [M:4/4] [DFA]8 | [M:4/4] [DFB]8 |
+[M:4/4] [EGc]8 | [M:4/4] [FAc]8 | [M:4/4] !mark:privacy! !p! [DFB]8 | [M:4/4] [EGc]8 |
+[M:4/4] [DFA]8 | [M:4/4] !mark:platforms! !mf! [FAc]8 | [M:4/4] [EAc]8 | [M:4/4] [DFB]8 |
+[M:4/4] [EGc]8 | [M:1/4] [EGc]2 | [M:4/4] !mark:end! !f! [FAc]8 | [M:4/4] [FAc]8 |
+[M:4/4] z8 |
+V:BAS inst=bass gain=0.8
+[M:4/4] !mp! z8 | [M:4/4] z8 | [M:4/4] z8 | [M:4/4] !mf! D,,2 zD,, D,,2 D,,2 |
+[M:4/4] B,,,2 zB,,, B,,,2 B,,,2 | [M:4/4] C,2 zC, CC, z2 | [M:4/4] !f! F,,2 zF,, F,F,, zF,, | [M:4/4] D,,2 zD,, D,D,, zD,, |
+[M:4/4] B,,,2 zB,,, B,,B,,, zB,,, | [M:4/4] C,2 zC, CC, zC, | [M:2/4] C,4 | [M:4/4] !mp! F,,4 F,,4 |
+[M:4/4] C,4 C,4 | [M:4/4] !mf! F,,2 zF,, F,,2 F,,2 | [M:4/4] A,,2 zA,, A,,2 A,,2 | [M:4/4] B,,,2 zB,,, B,,,2 B,,,2 |
+[M:4/4] C,2 zC, C,2 C,2 | [M:4/4] F,,2 zF,, F,,2 F,,2 | [M:4/4] A,,2 zA,, A,,2 A,,2 | [M:4/4] B,,,2 zB,,, B,,,2 B,,,2 |
+[M:4/4] C,2 zC, C,2 C,2 | [M:4/4] F,,2 zF,, F,,2 F,,2 | [M:4/4] A,,2 zA,, A,,2 A,,2 | [M:4/4] B,,,2 zB,,, B,,,2 B,,,2 |
+[M:4/4] C,2 zC, C,2 C,2 | [M:4/4] F,,2 zF,, F,,2 F,,2 | [M:4/4] A,,2 zA,, A,,2 A,,2 | [M:4/4] B,,,2 zB,,, B,,,2 B,,,2 |
+[M:4/4] B,,,2 zB,,, B,,,2 B,,,2 | [M:4/4] C,2 zC, C,2 C,2 | [M:4/4] A,,2 zA,, A,,2 A,,2 | [M:4/4] D,,2 zD,, D,,2 D,,2 |
+[M:4/4] B,,,2 zB,,, B,,,2 B,,,2 | [M:4/4] C,2 zC, C,2 C,2 | [M:4/4] A,,2 zA,, A,,2 A,,2 | [M:4/4] D,,2 zD,, D,,2 D,,2 |
+[M:4/4] B,,,2 zB,,, B,,,2 B,,,2 | [M:4/4] F,,2 zF,, F,,2 F,,2 | [M:4/4] D,,2 zD,, D,,2 D,,2 | [M:4/4] B,,,2 zB,,, B,,,2 B,,,2 |
+[M:4/4] C,2 zC, C,2 C,2 | [M:4/4] F,,2 zF,, F,F,, zF,, | [M:4/4] D,,2 zD,, D,D,, zD,, | [M:4/4] B,,,2 zB,,, B,,B,,, zB,,, |
+[M:4/4] C,2 zC, CC, z2 | [M:4/4] !f! F,,2 zF,, F,F,, zF,, | [M:4/4] D,,2 zD,, D,D,, zD,, | [M:4/4] B,,,2 zB,,, B,,B,,, zB,,, |
+[M:4/4] C,2 zC, CC, zC, | [M:4/4] F,,2 zF,, F,F,, z2 | [M:4/4] !p! z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] !mf! F,,2 zF,, F,F,, zF,, | [M:4/4] A,,2 zA,, A,A,, zA,, | [M:4/4] B,,,2 zB,,, B,,B,,, zB,,, |
+[M:4/4] C,2 zC, CC, zC, | [M:1/4] C,2 | [M:4/4] !f! F,,2 zF,, F,F,, zF,, | [M:4/4] z8 |
+[M:4/4] z8 |
+V:DR inst=drums kit=acoustic gain=0.75
+[M:4/4] !mp! z8 | [M:4/4] z8 | [M:4/4] ^F,,^F,, ^F,,^F,, ^F,,^F,, ^F,,^F,, | [M:4/4] !mf! [C,,^C,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, |
+[M:4/4] [C,,^F,,]^F,, [D,,^F,,][C,,^F,,] [C,,^F,,]^F,, [D,,^F,,]^A,, | [M:4/4] [C,,^F,,]^F,, [D,,^F,,][C,,^F,,] [C,,^F,,]^F,, z2 | [M:4/4] !f! [C,,^C,]^F,, [D,,^F,,][C,,^F,,] [C,,^F,,]^F,, [D,,^F,,]^A,, | [M:4/4] [C,,^F,,]^F,, [D,,^F,,][C,,^F,,] [C,,^F,,]^F,, [D,,^F,,]^A,, |
+[M:4/4] [C,,^F,,]^F,, [D,,^F,,][C,,^F,,] [C,,^F,,]^F,, [D,,^F,,]^A,, | [M:4/4] [C,,^F,,]^F,, [D,,^F,,][C,,^F,,] [C,,^F,,]^F,, [D,,^F,,]^A,, | [M:2/4] ^F,,^F,, ^F,,^F,, | [M:4/4] !mp! ^F,,^F,, ^F,,^F,, ^F,,^F,, ^F,,^F,, |
+[M:4/4] ^F,,^F,, ^F,,^F,, ^F,,^F,, ^F,,^F,, | [M:4/4] !mf! [C,,^C,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, | [M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, | [M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, |
+[M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, | [M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, | [M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, | [M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, |
+[M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, | [M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, | [M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, | [M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, |
+[M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, | [M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, | [M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, | [M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, |
+[M:4/4] [C,,^C,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, | [M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, | [M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, | [M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, |
+[M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, | [M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, | [M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, | [M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, |
+[M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, | [M:4/4] [C,,^C,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, | [M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, | [M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, |
+[M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, | [M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, | [M:4/4] [C,,^F,,]^F,, [^C,,^F,,]^F,, [C,,^F,,]^F,, [^C,,^F,,]^F,, | [M:4/4] [C,,^F,,]^F,, [D,,^F,,][C,,^F,,] [C,,^F,,]^F,, [D,,^F,,]^A,, |
+[M:4/4] [C,,^F,,]^F,, [D,,^F,,][C,,^F,,] [C,,^F,,]^F,, z2 | [M:4/4] !f! [C,,^C,]^F,, [D,,^F,,][C,,^F,,] [C,,^F,,]^F,, [D,,^F,,]^A,, | [M:4/4] [C,,^F,,]^F,, [D,,^F,,][C,,^F,,] [C,,^F,,]^F,, [D,,^F,,]^A,, | [M:4/4] [C,,^F,,]^F,, [D,,^F,,][C,,^F,,] [C,,^F,,]^F,, [D,,^F,,]^A,, |
+[M:4/4] [C,,^F,,]^F,, [D,,^F,,][C,,^F,,] [C,,^F,,]^F,, [D,,^F,,]^A,, | [M:4/4] [C,,^F,,]^F,, [D,,^F,,][C,,^F,,] [C,,^F,,]^F,, z2 | [M:4/4] !p! z8 | [M:4/4] z8 |
+[M:4/4] z8 | [M:4/4] !mf! [C,,^C,]^F,, [D,,^F,,][C,,^F,,] [C,,^F,,]^F,, [D,,^F,,]^A,, | [M:4/4] [C,,^F,,]^F,, [D,,^F,,][C,,^F,,] [C,,^F,,]^F,, [D,,^F,,]^A,, | [M:4/4] [C,,^F,,]^F,, [D,,^F,,][C,,^F,,] [C,,^F,,]^F,, [D,,^F,,]^A,, |
+[M:4/4] [C,,^F,,]^F,, [D,,^F,,][C,,^F,,] [C,,^F,,]^F,, [D,,^F,,]^A,, | [M:1/4] ^F,,^F,, | [M:4/4] !f! [C,,^C,]^F,, [D,,^F,,][C,,^F,,] [C,,^F,,]^F,, [D,,^F,,]^A,, | [M:4/4] z8 |
+[M:4/4] z8 |
+</script>
+<script>
+const V = OM.vars();
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => [...document.querySelectorAll(s)];
+const EASE = 'cubic-bezier(0.25,0.1,0.25,1)';
+const appleEase = (p) => { // cubic-bezier(0.25,0.1,0.25,1) ≈ CSS "ease"
+  let lo = 0, hi = 1, x;
+  for (let i = 0; i < 24; i++) { const m = (lo + hi) / 2; x = 3*m*(1-m)*(1-m)*0.25 + 3*m*m*(1-m)*0.25 + m*m*m; if (x < p) lo = m; else hi = m; }
+  const m = (lo + hi) / 2; return 3*m*(1-m)*(1-m)*0.1 + 3*m*m*(1-m)*1 + m*m*m;
+};
+gsap.registerEase('apple', appleEase);
+
+// ---------- kinds & sticker files ----------
+const K = {
+  image:   { c:'#7a68f0', zh:'图片', g:'<path d="M8 38 20 22l8 9 6-6 8 13Z" fill="currentColor"/><circle cx="33" cy="13" r="5" fill="currentColor"/>' },
+  video:   { c:'#e0436b', zh:'视频', g:'<rect x="6" y="9" width="36" height="30" rx="7" fill="none" stroke="currentColor" stroke-width="4.5"/><path d="M20 17v14l11-7Z" fill="currentColor"/>' },
+  audio:   { c:'#1fa874', zh:'音频', g:'<path d="M18 34V12l20-4v22" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linejoin="round"/><circle cx="13" cy="35" r="6" fill="currentColor"/><circle cx="33" cy="31" r="6" fill="currentColor"/>' },
+  data:    { c:'#2492e0', zh:'数据', g:'<text x="24" y="35" text-anchor="middle" font-family="Inter" font-weight="900" font-size="28" fill="currentColor">{ }</text>' },
+  doc:     { c:'#e8930f', zh:'文档', g:'<rect x="10" y="6" width="28" height="36" rx="6" fill="none" stroke="currentColor" stroke-width="4.5"/><path d="M17 17h14M17 24h14M17 31h9" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>' },
+  sub:     { c:'#9a6cf0', zh:'字幕', g:'<rect x="5" y="10" width="38" height="28" rx="7" fill="none" stroke="currentColor" stroke-width="4.5"/><path d="M12 26h10M26 26h10M12 32h18" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>' },
+  archive: { c:'#a9773d', zh:'压缩包', g:'<rect x="10" y="6" width="28" height="36" rx="6" fill="none" stroke="currentColor" stroke-width="4.5"/><path d="M24 6v6m0 4v4m0 4v4" stroke="currentColor" stroke-width="5"/><rect x="19" y="30" width="10" height="8" rx="2" fill="currentColor"/>' },
+  font:    { c:'#1f9e94', zh:'字体', g:'<text x="24" y="36" text-anchor="middle" font-family="Inter" font-weight="900" font-size="30" fill="currentColor">Aa</text>' },
+};
+function fileEl(kind, label, x, y, opts = {}) {
+  const k = K[kind], d = document.createElement('div');
+  d.className = 'file'; d.style.setProperty('--c', k.c);
+  d.style.left = x + 'px'; d.style.top = y + 'px';
+  if (opts.w) { d.style.width = opts.w + 'px'; d.style.height = opts.h + 'px'; d.style.borderRadius = (opts.r || 22) + 'px'; d.style.gap = '6px'; }
+  d.innerHTML = `<svg viewBox="0 0 48 48" style="color:color-mix(in srgb, ${k.c} 85%, #14213d)${opts.w ? `;width:${opts.gw}px;height:${opts.gw}px` : ''}">${k.g}</svg>` + (opts.zh ? `<i>${k.zh}</i>` : `<b>${label}</b>`);
+  return d;
+}
+
+// ---------- gophers: bitmap poses (assets/poses/<name>.png, from tools/sync-poses.py) ----------
+// The images are stills, so the life comes from moving the whole figure: an idle bob and sway
+// per pose, a squash-and-stretch punch on every pose change, and a quick cross-fade between poses.
+const GOPHERS = {};
+function mountGopher(id, schedule) {
+  const el = document.getElementById(id);
+  const inner = document.createElement('div'); inner.className = 'gin'; el.appendChild(inner);
+  const map = {};
+  [...new Set(schedule.map((s) => s[1]))].forEach((p) => {
+    const img = document.createElement('img'); img.className = 'gpose'; img.src = `assets/poses/${p}.png`; img.alt = '';
+    inner.appendChild(img); map[p] = img;
+  });
+  GOPHERS[id] = { schedule, map, inner, size: el.offsetWidth };
+}
+// idle motion per pose: A bob (fraction of size), P period (s), R sway (deg), plus specials
+const MOVES = {
+  wave: { A: .014, P: 1.4, R: 3 },   peek: { A: .008, P: 1.2, R: 2 },  surprise: { A: 0, P: 1, R: 0, shake: 1 },
+  juggle: { A: .025, P: .6, R: 4 },  point: { A: .012, P: 1.6, R: 1.5 }, shield: { A: .01, P: 2, R: 1 },
+  think: { A: .006, P: 2.4, R: 4 },  cheer: { A: .05, P: .7, R: 3, jump: 1 }, laptop: { A: .006, P: 1.8, R: 1 },
+  devices: { A: .01, P: 1.8, R: 2 }, run: { A: .02, P: .36, R: 3, lean: 6 }, palette: { A: .01, P: 1.6, R: 3 },
+  magnifier: { A: .01, P: 2, R: 3 }, bow: { A: .006, P: 2, R: 1 },     sleep: { A: 0, P: 3, R: 1.5, breathe: 1 },
+  dive: { A: 0, P: 1, R: 0 },        surf: { A: .018, P: .8, R: 5, lean: 4 }, throw: { A: .012, P: 1, R: 3 },
+};
+function poseState(g, t) {
+  let cur = g.schedule[0][1], prev = null, at = -99;
+  for (const [s, p] of g.schedule) if (t >= s) { if (p !== cur) prev = cur; cur = p; at = s; }
+  return { cur, prev, dt: t - at };
+}
+function drawGopher(g, t) {
+  const { cur, prev, dt } = poseState(g, t);
+  const fade = prev === null ? 1 : Math.min(1, Math.max(0, dt / 0.09));   // the first pose is simply there
+  for (const [k, img] of Object.entries(g.map)) img.style.opacity = k === cur ? fade : (k === prev ? 1 - fade : 0);
+  const m = MOVES[cur] || MOVES.point, w = 2 * Math.PI * t / m.P, S = g.size;
+  let y = -Math.abs(m.A * S) * (m.jump ? Math.abs(Math.sin(w / 2)) * 2 : (Math.sin(w) + 1) / 2);
+  let x = m.shake ? Math.sin(t * 70) * S * 0.008 * Math.exp(-dt * 3) : 0;
+  let rot = m.R * Math.sin(w * 0.77) + (m.lean || 0);
+  const punch = dt < 1.2 ? 0.13 * Math.exp(-dt * 9) * Math.cos(dt * 24) : 0;   // squash on a pose change
+  const breathe = m.breathe ? 0.025 * Math.sin(w) : 0;
+  const sx = 1 + punch - breathe * 0.5, sy = 1 - punch + breathe;
+  g.inner.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg) scale(${sx}, ${sy})`;
+}
+
+// ---------- build the scenes' dynamic parts ----------
+// intro orbit (the app's home screen: files orbit the gopher)
+const introKinds = [['image','PNG'],['video','MP4'],['audio','MP3'],['doc','PDF'],['data','JSON'],['font','TTF']];
+const introOrbs = introKinds.map(([k, l]) => { const o = document.createElement('div'); o.className = 'orb'; o.appendChild(fileEl(k, l, -75, -92)); $('#introOrbit').appendChild(o); return o; });
+
+// chaos: 14 stickers slammed around the frame
+const chaosSpec = [
+  ['image','HEIC',150,90,-12],['video','MKV',430,330,8],['audio','FLAC',140,460,6],['doc','DOCX',1230,520,-7],
+  ['data','YAML',1560,90,10],['sub','SRT',640,60,-6],['archive','RAR',1610,440,-10],['font','WOFF2',1130,40,7],
+  ['image','AVIF',380,640,-4],['video','MOV',1420,620,9],['audio','OPUS',920,40,-9],['data','XLSX',60,250,12],
+  ['doc','EPUB',1720,250,-5],['sub','ASS',1340,280,4],
+];
+const chaosEls = chaosSpec.map(([k, l, x, y, r]) => { const f = fileEl(k, l, x, y); f.style.rotate = r + 'deg'; $('#chaosFiles').appendChild(f); return f; });
+
+// feed: inputs on the left, outputs on the right
+const pairs = [['image','HEIC','PNG'],['video','MKV','MP4'],['audio','FLAC','MP3'],['doc','MD','HTML'],['data','CSV','XLSX'],['sub','SRT','VTT']];
+const slotsL = [[250,300],[440,300],[250,540],[440,540],[250,780],[440,780]];
+const slotsR = [[1330,300],[1520,300],[1330,540],[1520,540],[1330,780],[1520,780]];
+const feedIn = pairs.map(([k, a], i) => { const f = fileEl(k, a, ...slotsL[i]); f.style.rotate = ((i % 2 ? 1 : -1) * (4 + i)) + 'deg'; $('#feedFiles').appendChild(f); return f; });
+const feedOut = pairs.map(([k, , b], i) => { const f = fileEl(k, b, ...slotsR[i]); f.style.rotate = ((i % 2 ? -1 : 1) * (3 + i)) + 'deg'; $('#feedFiles').appendChild(f); return f; });
+const routeEls = pairs.slice(0, 3).map(([k, a, b]) => { const r = document.createElement('div'); r.className = 'route'; r.style.opacity = 0;
+  r.innerHTML = `<span style="color:${K[k].c}">${a}</span><em>→</em><span style="color:${K[k].c}">${b}</span>`; $('#routes').appendChild(r); return r; });
+
+// bento: juggled files, the 8 kinds, route chips
+const kindEls = Object.keys(K).map((k, i) => { const f = fileEl(k, '', 48 + i * 100, 230, { w: 88, h: 140, gw: 46, r: 20, zh: true }); f.style.boxShadow = '5px 5px 0 #14213d'; f.style.borderWidth = '4px';
+  f.querySelector('i').style.fontSize = k === 'archive' ? '16px' : '20px'; $('#kinds').appendChild(f); return f; });
+const chipEls = [['image','HEIC',880],['image','PNG',1180],['image','WebP',1480]].map(([k, l, x]) => { const f = fileEl(k, l, x, 36); $('#routeChips').appendChild(f); return f; });
+
+// themes
+const THEMES = [   // settings.go accents: light accent, page bg, raised card, tint, ink
+  { nm:'中性黑白', accent:'#1a1b1f', bg:'#f4f4f5', raised:'#ededee', tint:'#e7e7e9', ink:'#1a1b1f' },
+  { nm:'薄荷',     accent:'#11996a', bg:'#f0f7f3', raised:'#e5f4ec', tint:'#dbf0e5', ink:'#0b3626' },
+  { nm:'暖橘',     accent:'#e2681c', bg:'#fbf5f0', raised:'#fcebdf', tint:'#fbe2d0', ink:'#3d1d0a' },
+  { nm:'地鼠天蓝', accent:'#1f7fe0', bg:'#f2f6fc', raised:'#e9f3fe', tint:'#e3f2fe', ink:'#14213d' },
+];
+const IMG_ICON = '<svg viewBox="0 0 48 48"><path d="M8 38 20 22l8 9 6-6 8 13Z" fill="currentColor"/><circle cx="33" cy="13" r="5" fill="currentColor"/></svg>';
+// one theme page; unlit it is drawn in plain greys, lit it is the theme's own page
+const themePage = (t) => `<div class="layer" style="background:${t.bg}"></div>
+  <div class="nm" style="color:${t.ink}">${t.nm}</div>
+  <div class="panel" style="background:${t.raised}">
+    <div class="stk" style="background:${t.tint};border-color:${t.ink};box-shadow:7px 7px 0 ${t.ink};color:${t.accent}">${IMG_ICON}<span style="color:${t.ink}">PNG</span></div>
+    <div class="arr" style="color:${t.ink}">→</div>
+    <div class="chip" style="background:${t.bg};color:${t.accent};box-shadow:inset 0 0 0 4px ${t.accent}">WEBP</div>
+  </div>
+  <div class="btn" style="background:${t.ink};color:${t.bg}">转换 3 个文件</div>`;
+const GREY = { accent:'#c7c7cc', bg:'#ffffff', raised:'#f5f5f7', tint:'#f5f5f7', ink:'#d2d2d7' };
+const themeX = [64, 520, 976, 1432];
+const themeEls = THEMES.map((th, i) => { const c = document.createElement('div'); c.className = 'card theme'; c.dataset.omId = 'theme-' + i;
+  Object.assign(c.style, { left: themeX[i] + 'px', top: '460px', width: '424px', height: '560px', opacity: 0 });
+  c.innerHTML = `<div class="layer">${themePage({ ...GREY, nm: th.nm })}</div>
+    <div class="layer lit" style="clip-path:circle(0% at 50% 0%)">${themePage(th)}</div>`;
+  $('#themes').appendChild(c); return c; });
+
+// ---------- gopher schedules (seconds → pose) ----------
+mountGopher('gIntro',  [[0,'peek'],[0.42,'wave'],[4.9,'dive']]);
+mountGopher('gChaos',  [[0,'surprise'],[9.5,'think'],[10.4,'sleep'],[11.25,'surprise']]);
+mountGopher('gFeed',   [[0,'point']].concat(
+  [13, 15, 17].flatMap((T) => [[T + 0.3, 'surprise'], [T + 0.75, 'run'], [T + 1.1, 'throw'], [T + 1.7, 'point']]),
+  [[18.55, 'juggle'], [19.85, 'cheer']]));
+mountGopher('gDemo',   [[0,'laptop']]);
+mountGopher('gD1',     [[0,'point'],[29,'magnifier'],[30,'cheer']]);
+mountGopher('gD2',     [[0,'think'],[37.1,'point'],[38.8,'throw']]);
+mountGopher('gD5',     [[0,'magnifier'],[48.1,'think'],[50.2,'point']]);
+mountGopher('gD3',     [[0,'palette']]);
+mountGopher('gD4',     [[0,'devices'],[80.9,'run'],[85.7,'throw']]);
+mountGopher('gJuggle', [[0,'juggle']]);
+mountGopher('gSurf',   [[0,'surf']]);
+mountGopher('gShield', [[0,'shield']]);
+mountGopher('gLaptop', [[0,'devices']]);
+mountGopher('gHop',    [[0,'run'],[109.55,'palette'],[109.95,'run'],[110.35,'palette'],[110.75,'run'],[111.15,'palette'],[111.55,'run'],[111.95,'cheer']]);
+mountGopher('gCheer',  [[0,'cheer'],[115.9,'bow']]);
+
+// ---------- timeline ----------
+// entrances below use immediateRender: false, so every entering element is hidden here first
+gsap.set(['#gFeed', '#ring', '#bA', '#gJuggle', '#privCard', '#gShield', '#cloud', '#gLaptop', '#s-plat .tag', '#gCheer', '#endMark'], { opacity: 0 });
+const tl = gsap.timeline({ paused: true, defaults: { ease: 'apple' } });
+const FT = { immediateRender: false };
+const show = (sel, t) => tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: 0.001, ...FT }, t);
+const hide = (sel, t) => tl.fromTo(sel, { opacity: 1 }, { opacity: 0, duration: 0.001, ...FT }, t);
+const rise = (sel, t, o = {}) => (gsap.set(sel, { opacity: 0 }), tl).fromTo(sel, { opacity: 0, y: 40, scale: o.s || 1 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, stagger: o.st || 0.1, ...FT }, t);
+const reveal = (sel, t, st = 0.12) => tl.fromTo(sel, { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: 'expo.out', stagger: st, ...FT }, t);
+const lines = (scope) => `${scope} .ln > span`;
+
+// 1 · intro (0–6)
+tl.addLabel('scene:intro', 0);
+$$('#s-intro .ln > span').forEach((s) => gsap.set(s, { yPercent: 110 }));
+tl.fromTo('#gIntro', { y: 60, scale: 0.9 }, { y: 0, scale: 1, duration: 0.5, ease: 'back.out(2)', ...FT }, 0.42); OM.sfx('boing', 0.45);
+reveal('#s-intro .wordmark > span', 1.0); OM.sfx('impact', 1.05, { gain: 0.5 });
+reveal('#s-intro h1 .ln > span', 1.6); OM.sfx('pop', 1.65);
+reveal('#s-intro .sub .ln > span', 2.0);
+tl.fromTo('#introCard', { scale: 1 }, { scale: 1.0, duration: 0.01, ...FT }, 0);
+// dive back into the hole
+tl.fromTo('#gIntro', { scaleY: 1, opacity: 1 }, { scaleY: 0.25, opacity: 0, duration: 0.45, ease: 'power3.in', ...FT }, 5.25); OM.sfx('slide', 5.25, { dur: 0.4 });
+tl.fromTo('#s-intro .abs, #introOrbit', { opacity: 1 }, { opacity: 0, duration: 0.3, ...FT }, 5.35);
+hide('#s-intro', 6);
+
+// 2 · chaos (6–12)
+tl.addLabel('scene:chaos', 6);
+show('#s-chaos', 6);
+gsap.set(chaosEls, { opacity: 0 }); gsap.set(['#chaosA .ln > span', '#chaosB .ln > span'], { yPercent: 110 }); gsap.set('#upload', { opacity: 0 });
+tl.fromTo('#gChaos', { y: 420, scaleY: 0.8 }, { y: 0, scaleY: 1, duration: 0.45, ease: 'back.out(1.8)', ...FT }, 6.0); OM.sfx('boing', 6.05);
+chaosEls.forEach((f, i) => {
+  const t = 6.5 + (i < 6 ? i * 0.5 : 3 + (i - 6) * 0.25);
+  tl.fromTo(f, { opacity: 0, scale: 1.7 }, { opacity: 1, scale: 1, duration: 0.22, ease: 'power4.out', ...FT }, t);
+  OM.sfx(i % 3 ? 'paper' : 'thud', t + 0.18, { gain: 0.55, pan: (parseFloat(f.style.left) - 900) / 1100 });
+});
+reveal('#chaosA .ln > span', 7.0);
+tl.fromTo('#chaosA .ln > span', { yPercent: 0 }, { yPercent: -110, duration: 0.35, ease: 'power3.in', ...FT }, 9.3);
+reveal('#chaosB .ln > span', 9.6);
+tl.fromTo('#upload', { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.35, ease: 'back.out(2)', ...FT }, 9.7); OM.sfx('pop', 9.75);
+tl.fromTo('#upload .bar > span', { scaleX: 0.16 }, { scaleX: 1, duration: 1.4, ease: 'power1.out', ...FT }, 9.8);
+// everything is sucked into the gopher's mouth
+chaosEls.forEach((f, i) => {
+  const cx = 960 - (parseFloat(f.style.left) + 75), cy = 470 - (parseFloat(f.style.top) + 92);
+  tl.fromTo(f, { x: 0, y: 0, scale: 1 }, { x: cx, y: cy, scale: 0.1, rotation: 200, duration: 0.42, ease: 'power3.in', ...FT }, 11.25 + i * 0.025);
+});
+tl.fromTo('#upload', { opacity: 1 }, { opacity: 0, duration: 0.2, ...FT }, 11.25);
+tl.fromTo('#chaosB', { opacity: 1 }, { opacity: 0, duration: 0.25, ...FT }, 11.3);
+OM.sfx('whoosh', 11.55);
+hide('#s-chaos', 12);
+
+// 3 · feed (12–20)
+tl.addLabel('scene:feed', 12);
+show('#s-feed', 12);
+gsap.set(lines('#s-feed'), { yPercent: 110 }); gsap.set([...feedIn, ...feedOut], { opacity: 0 });
+reveal(lines('#s-feed'), 12.1); OM.sfx('impact', 12.0, { gain: 0.45 });
+tl.fromTo('#gFeed', { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: 'back.out(1.7)', ...FT }, 12.0);
+tl.fromTo('#ring', { opacity: 0 }, { opacity: 1, duration: 0.5, ...FT }, 12.2);
+feedIn.forEach((f, i) => tl.fromTo(f, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ...FT }, 12.3 + i * 0.1));
+OM.sfx('tick', 12.4); OM.sfx('tick', 12.6); OM.sfx('tick', 12.8);
+const MOUTH = [960, 470], DOC = [960, 560];
+function swallow(i, T, dur = 0.45) {
+  const f = feedIn[i], [sx, sy] = slotsL[i];
+  tl.fromTo(f, { x: 0, y: 0, scale: 1 }, { x: MOUTH[0] - (sx + 75), y: MOUTH[1] - (sy + 92), scale: 0.15, rotation: 140, duration: dur, ease: 'power2.in', ...FT }, T);
+  tl.fromTo(f, { opacity: 1 }, { opacity: 0, duration: 0.05, ...FT }, T + dur);
+  OM.sfx('whoosh', T + dur * 0.8, { gain: 0.35 });
+}
+function spit(i, T, dur = 0.5) {
+  const f = feedOut[i], [sx, sy] = slotsR[i];
+  tl.fromTo(f, { opacity: 0, x: DOC[0] - (sx + 75), y: DOC[1] - (sy + 92), scale: 0.2 }, { opacity: 1, x: 0, y: 0, scale: 1, duration: dur, ease: 'back.out(1.4)', ...FT }, T);
+  OM.sfx('ding', T + dur * 0.7, { note: i % 5, gain: 0.5 });
+}
+[13, 15, 17].forEach((T, i) => {
+  swallow(i, T); OM.sfx('pop', T + 0.48, { gain: 0.5 });
+  spit(i, T + 1.15);
+  tl.fromTo(routeEls[i], { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ...FT }, T + 1.1)
+    .fromTo(routeEls[i], { opacity: 1 }, { opacity: 0, duration: 0.25, ...FT }, T + 1.85);
+});
+[18.6, 19.0, 19.4].forEach((T, j) => { swallow(3 + j, T, 0.3); spit(3 + j, T + 0.35, 0.35); });
+tl.fromTo('#s-feed', { opacity: 1, y: 0 }, { opacity: 0, y: -60, duration: 0.35, ease: 'power2.in', ...FT }, 20.6);
+OM.sfx('whip', 20.7);
+
+// 4 · demo (21–88.5): the real app, screen-recorded; captions follow the recording
+tl.addLabel('scene:demo', 21);
+show('#s-demo', 21);
+gsap.set(lines('#s-demo'), { yPercent: 110 }); gsap.set(['#demoCard', '#gDemo', '#demoTags .tag'], { opacity: 0 });
+tl.fromTo('#demoCard', { opacity: 0, scale: 0.94 }, { opacity: 1, scale: 1, duration: 0.5, ...FT }, 21.0);
+tl.fromTo('#gDemo', { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 0.5, ease: 'back.out(1.6)', ...FT }, 21.2); OM.sfx('boing', 21.3);
+reveal(lines('#s-demo'), 21.4); OM.sfx('impact', 21.45, { gain: 0.45 });
+tl.fromTo('#demoTags .tag', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.12, ease: 'back.out(2)', ...FT }, 22.0);
+[22.1, 22.22, 22.34].forEach((t, i) => OM.sfx('pop', t, { note: i + 1, gain: 0.45 }));
+tl.fromTo('#s-demo', { opacity: 1, scale: 1 }, { opacity: 0, scale: 1.04, duration: 0.35, ease: 'power2.in', ...FT }, 24.6);
+hide('#s-demo', 25);
+
+// one recorded scene: the card rises, the heading reveals, the steps light up as the recording reaches them
+function demoScene(id, S, E, card, steps, gid) {
+  tl.addLabel('scene:' + id, S);
+  show('#s-' + id, S);
+  const sc = '#s-' + id;
+  gsap.set(lines(sc), { yPercent: 110 }); gsap.set([card, sc + ' .kick', sc + ' .step', '#' + gid], { opacity: 0 });
+  tl.fromTo(card, { opacity: 0, y: 60, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ...FT }, S); OM.sfx('thud', S + 0.3, { gain: 0.5 });
+  tl.fromTo(sc + ' .kick', { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.4, ...FT }, S + 0.2);
+  reveal(lines(sc), S + 0.3);
+  tl.fromTo(sc + ' .step', { opacity: 0, y: 40 }, { opacity: 0.38, y: 0, duration: 0.5, stagger: 0.1, ...FT }, S + 0.4);
+  // a slow push-in keeps the recording alive while the UI waits between clicks
+  tl.fromTo(card, { scale: 1 }, { scale: 1.035, duration: E - S - 1.0, ease: 'none', ...FT }, S + 0.5);
+  tl.fromTo('#' + gid, { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.45, ease: 'back.out(1.8)', ...FT }, S + 0.6);
+  const els = $$(sc + ' .step');
+  steps.forEach((v, i) => {
+    const t = S + v, el = els[i];
+    tl.fromTo(el, { opacity: 0.38, x: 0 }, { opacity: 1, x: -8, duration: 0.35, ...FT }, t)
+      .fromTo(el.querySelectorAll('.hl, .n2'), { opacity: 0 }, { opacity: 1, duration: 0.25, ...FT }, t);
+    OM.sfx('pop', t + 0.05, { note: i * 2, gain: 0.5 });
+    if (i > 0) {
+      const p = els[i - 1];
+      tl.fromTo(p, { opacity: 1, x: -8 }, { opacity: 0.6, x: 0, duration: 0.3, ...FT }, t)
+        .fromTo(p.querySelectorAll('.hl, .n2'), { opacity: 1 }, { opacity: 0, duration: 0.25, ...FT }, t);
+    }
+  });
+  tl.fromTo(sc, { opacity: 1, y: 0 }, { opacity: 0, y: -40, duration: 0.35, ease: 'power2.in', ...FT }, E - 0.4);
+  hide(sc, E);
+}
+// times inside each scene follow its recording (the video starts 0.5 s after the card, except d2/d4)
+demoScene('d1', 25, 31.5, '#vc1', [1.7, 4.0, 4.9], 'gD1');
+demoScene('d2', 31.5, 44.5, '#vc2', [0.9, 5.6, 7.3], 'gD2');
+gsap.set('#ping2', { opacity: 0 });
+tl.fromTo('#ping2', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)', ...FT }, 39)
+  .fromTo('#ping2', { scale: 1 }, { scale: 1.18, duration: 0.5, yoyo: true, repeat: 5, ease: 'sine.inOut', ...FT }, 39.4);
+demoScene('d5', 44.5, 54.5, '#vc5', [1.5, 3.6, 5.7], 'gD5');
+demoScene('d3', 54.5, 72.5, '#vc3', [1.4, 9.3, 11.6], 'gD3');
+// the ring on the colour dots follows the theme picked in the recording: neutral → mint → orange → sky → neutral
+gsap.set('#st3 .ring', { x: 144 });
+[[55.9, 144, 0], [59.2, 0, 48], [61.5, 48, 96], [63.8, 96, 144]].forEach(([t, a, b]) => {
+  tl.fromTo('#st3 .ring', { x: a }, { x: b, duration: 0.35, ease: 'back.out(1.6)', ...FT }, t);
+});
+demoScene('d4', 72.5, 88.5, '#ph4', [0.4, 8.4, 13.2], 'gD4');
+
+// 5 · bento (88.5–98.5)
+tl.addLabel('scene:bento', 88.5);
+show('#s-bento', 88.5);
+tl.fromTo('#bA', { opacity: 0, y: 40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ...FT }, 88.5);
+rise(['#bB', '#bC', '#bD'], 88.6);
+['#bA', '#bB', '#bC', '#bD'].forEach((s, i) => OM.sfx('tick', 88.9 + i * 0.1, { gain: 0.5 }));
+OM.sfx('count', 88.8, { dur: 1.5 });
+gsap.set(kindEls, { opacity: 0 });
+kindEls.forEach((f, i) => { tl.fromTo(f, { opacity: 0, y: 30, scale: 0.6 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: 'back.out(2)', ...FT }, 89.5 + i * 0.12); OM.sfx('pop', 89.6 + i * 0.12, { note: i % 7, gain: 0.4 }); });
+tl.fromTo('#gJuggle', { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.5, ease: 'back.out(1.6)', ...FT }, 89.1);
+// camera pushes up to the route row
+tl.fromTo('#bentoWorld', { y: 0 }, { y: -492, duration: 0.9, ease: 'power3.inOut', ...FT }, 93.9); OM.sfx('whoosh', 94.2, { gain: 0.4 });
+gsap.set(chipEls, { opacity: 0 }); gsap.set('#surfer', { x: 700 }); gsap.set(['#ar1', '#ar2'], { scaleX: 0 });
+chipEls.forEach((c, i) => tl.fromTo(c, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ...FT }, 94.4 + i * 0.1));
+tl.fromTo('#surfer', { x: 700 }, { x: 1540, duration: 2.8, ease: 'power1.inOut', ...FT }, 94.9);
+[95.45, 96.45, 97.45].forEach((t, i) => {
+  tl.fromTo(chipEls[i], { scale: 1 }, { scale: 1.12, duration: 0.15, yoyo: true, repeat: 1, ease: 'power2.out', ...FT }, t);
+  OM.sfx('ding', t + 0.05, { note: i * 2, gain: 0.55 });
+});
+tl.fromTo('#ar1', { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: 'power3.out', ...FT }, 95.8);
+tl.fromTo('#ar2', { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: 'power3.out', ...FT }, 96.8);
+hide('#s-bento', 98.5);
+
+// 6 · privacy (98.5–104.5): stop, then the lock
+tl.addLabel('scene:privacy', 98.5);
+show('#s-priv', 98.5);
+gsap.set(lines('#s-priv'), { yPercent: 110 });
+tl.fromTo('#privCard', { opacity: 0, scale: 0.94 }, { opacity: 1, scale: 1, duration: 0.5, ...FT }, 99.1);
+tl.fromTo('#gShield', { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 0.45, ease: 'back.out(1.6)', ...FT }, 99.25); OM.sfx('stamp', 99.55);
+reveal('#s-priv h2 .ln > span', 99.6); OM.sfx('impact', 99.6, { gain: 0.5 });
+reveal('#s-priv .sub .ln > span', 100.1, 0.15);
+tl.fromTo('#cloud', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.45, ...FT }, 100.7); OM.sfx('pop', 100.8);
+tl.fromTo('#strike', { scaleX: 0 }, { scaleX: 1, duration: 0.3, ease: 'power3.out', ...FT }, 101.4); OM.sfx('draw', 101.4, { dur: 0.3 });
+tl.fromTo('#cloud', { y: 0, rotation: 0, opacity: 1 }, { y: 120, rotation: 14, opacity: 0, duration: 0.6, ease: 'power2.in', ...FT }, 102.2);
+tl.fromTo('#privCard', { opacity: 1, y: 0 }, { opacity: 0, y: -60, duration: 0.35, ease: 'power2.in', ...FT }, 104.1);
+hide('#s-priv', 104.5);
+
+// 7 · platforms (104.5–108.9) then themes (108.9–113)
+tl.addLabel('scene:platforms', 104.5);
+show('#s-plat', 104.5);
+gsap.set(lines('#s-plat'), { yPercent: 110 });
+reveal('#platA .ln > span', 104.6);
+rise(['#pDesk', '#pAnd', '#pIos'], 104.65);
+OM.sfx('tick', 105); OM.sfx('tick', 105.1); OM.sfx('tick', 105.2);
+tl.fromTo('#gLaptop', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.45, ease: 'back.out(1.6)', ...FT }, 105.1);
+tl.fromTo('#pDesk img:not(#deskDark)', { scale: 1 }, { scale: 1.08, duration: 3.5, ease: 'none', ...FT }, 105.1);
+tl.fromTo('#s-plat .tag', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.35, stagger: 0.08, ease: 'back.out(2)', ...FT }, 105.1);
+// the same app in dark mode, desktop first, then Android, then iOS
+[['#deskDark', 106.3], ['#andDark', 106.9], ['#iosDark', 107.5]].forEach(([sel, t]) => {
+  tl.fromTo(sel, { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 0.35, ease: 'power3.out', ...FT }, t);
+  OM.sfx('shutter', t, { gain: 0.35 });
+});
+tl.fromTo(['#pDesk', '#pAnd', '#pIos'], { x: 0 }, { x: -24, duration: 3.4, ease: 'none', ...FT }, 105.2);
+tl.fromTo(['#pDesk', '#pAnd', '#pIos'], { opacity: 1, y: 0 }, { opacity: 0, y: -60, duration: 0.35, stagger: 0.06, ease: 'power2.in', ...FT }, 108.6);
+tl.fromTo('#gLaptop', { opacity: 1 }, { opacity: 0, duration: 0.3, ...FT }, 108.6);
+tl.fromTo('#platA .ln > span', { yPercent: 0 }, { yPercent: -110, duration: 0.3, ease: 'power3.in', ...FT }, 108.6);
+tl.addLabel('scene:themes', 108.9);
+reveal('#platB .ln > span', 108.95);
+rise(themeEls, 108.9); OM.sfx('whoosh', 108.9, { gain: 0.35 });
+// the gopher hops card to card; each landing lights a theme
+const hopX = themeX.map((x) => x + 97), hopY = 460 - 208;
+gsap.set('#gHop', { opacity: 0 });
+tl.fromTo('#gHop', { opacity: 0 }, { opacity: 1, duration: 0.2, ...FT }, 109.1);
+tl.fromTo('#gHop', { x: hopX[0] - 260, y: hopY - 70 }, { x: hopX[0], duration: 0.45, ease: 'none', ...FT }, 109.1)
+  .fromTo('#gHop', { y: hopY - 70 }, { y: hopY, duration: 0.45, ease: 'power2.in', ...FT }, 109.1);
+[1, 2, 3].forEach((i) => {
+  const t = 109.55 + (i - 1) * 0.8 + 0.4;
+  tl.fromTo('#gHop', { x: hopX[i - 1] }, { x: hopX[i], duration: 0.4, ease: 'none', ...FT }, t)
+    .fromTo('#gHop', { y: hopY }, { y: hopY - 95, duration: 0.2, ease: 'power2.out', ...FT }, t)
+    .fromTo('#gHop', { y: hopY - 95 }, { y: hopY, duration: 0.2, ease: 'power2.in', ...FT }, t + 0.2);
+});
+themeEls.forEach((c, i) => {
+  const t = 109.55 + i * 0.8;
+  tl.fromTo(c.querySelector('.lit'), { clipPath: 'circle(0% at 50% 0%)' }, { clipPath: 'circle(150% at 50% 0%)', duration: 0.55, ease: 'power2.out', ...FT }, t);
+  OM.sfx('thud', t, { gain: 0.4 }); OM.sfx('ding', t + 0.05, { note: [0, 2, 4, 7][i], gain: 0.45 });
+});
+tl.fromTo('#s-plat', { opacity: 1, scale: 1 }, { opacity: 0, scale: 0.97, duration: 0.35, ease: 'power2.in', ...FT }, 112.7);
+hide('#s-plat', 113.05);
+
+// 8 · end
+tl.addLabel('scene:end', 113.05);
+show('#s-end', 113.05);
+gsap.set(lines('#s-end'), { yPercent: 110 });
+tl.fromTo('#gCheer', { opacity: 0, y: 160, scale: 0.7 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: 'back.out(1.7)', ...FT }, 113.1); OM.sfx('boing', 113.15);
+tl.fromTo('#endMark', { opacity: 0, y: 40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ...FT }, 113.5); OM.sfx('chime', 113.6);
+reveal('#s-end h2 .ln > span', 114); reveal('#s-end .sub .ln > span', 114.3);
+tl.to({}, { duration: V.endHold }, 114.8);
+
+// the music is the om-score above (tools/score.py writes it)
+
+// ---------- per-frame: rig loops, orbits, poses, counters ----------
+const easeOut = (p) => 1 - Math.pow(1 - p, 4);
+function orbit(orbs, t, cx, cy, rx, ry, speed, scale, frontZ, backZ) {
+  orbs.forEach((o, i) => {
+    const a = t * speed + i * (Math.PI * 2 / orbs.length);
+    const x = cx + Math.cos(a) * rx, y = cy + Math.sin(a) * ry, depth = Math.sin(a);
+    const s = scale * (0.82 + 0.18 * (depth + 1) / 2);
+    o.style.transform = `translate(${x}px, ${y}px) scale(${s}) rotate(${Math.cos(a) * 10}deg)`;
+    o.style.zIndex = depth > 0 ? frontZ : backZ;
+  });
+}
+function draw(t) {
+  for (const g of Object.values(GOPHERS)) drawGopher(g, t);
+  orbit(introOrbs, t, 540, 560, 320, 95, 0.9, 0.62, 12, 4);
+  const p1 = Math.min(1, Math.max(0, (t - 88.8) / 1.5));
+  $('#fmtNum').textContent = Math.round(V.formats * easeOut(p1)) + '+';
+  const p2 = Math.min(1, Math.max(0, (t - 88.9) / 1.0));
+  $('#platNum').textContent = Math.round(5 * easeOut(p2));
+}
+OM.clock(tl, draw, tl.duration());
+window.__timelines['film'] = tl;
+</script>
+</body>
+</html>

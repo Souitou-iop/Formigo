@@ -1,0 +1,22 @@
+<section id="build" data-transition="fade">
+<div class="row" style="align-items:flex-end; height:190px">
+<div style="flex:1; display:flex; flex-direction:column; gap:12px">
+<p class="eyebrow fade">工程</p>
+<div class="mask"><p class="title" style="--i:1">怎么做的。</p></div>
+</div>
+<div style="width:300px; height:190px; position:relative">
+<img class="pop" src="/_blob/874dbccc985f9d59c53b4360a12b2fe3" alt="小地鼠把文件抛向空中" style="position:absolute; left:40px; top:-80px; width:250px; height:270px; object-fit:contain; --i:1">
+</div>
+</div>
+<div class="grid" style="flex:1; grid-template-columns:repeat(3, 1fr); grid-template-rows:1fr 1fr">
+<div class="card rise" style="--i:2"><p class="eyebrow latin">DESKTOP</p><p class="h3" style="font-size:38px">Go + MyGo</p><p class="small">一套代码三个桌面系统；转换引擎在 internal/convert，自带 FFmpeg、PDFium</p></div>
+<div class="card rise" style="--i:3"><p class="eyebrow latin">ANDROID</p><p class="h3" style="font-size:38px">Kotlin + Compose</p><p class="small">原生转换引擎；液态玻璃底栏基于 AndroidLiquidGlass</p></div>
+<div class="card rise" style="--i:4"><p class="eyebrow latin">iOS</p><p class="h3" style="font-size:38px">SwiftUI</p><p class="small">原生转换引擎；工程由 XcodeGen 的 project.yml 描述</p></div>
+<div class="card sky rise" style="grid-column:1 / 3; --i:5; flex-direction:row; align-items:center; gap:40px">
+<div style="display:flex; flex-direction:column; gap:12px; flex:1"><p class="h3" style="font-size:38px">每个平台，都用真引擎测</p><p class="small">转换矩阵在各平台的真实引擎上逐一跑；只在有 FFmpeg 的平台测 FFmpeg 路线</p></div>
+<div class="row" style="gap:16px"><div class="stk s k-img"><p>PNG</p></div><div class="stk s k-aud"><p>WAV</p></div><div class="stk s k-dat"><p>CSV</p></div></div>
+</div>
+<div class="card ink rise" style="--i:6"><p class="eyebrow latin">RELEASE</p><p class="h3" style="font-size:38px">推送标签即发布</p><p class="small">v* 标签触发 GitHub Actions，构建全部平台并发到 Releases</p></div>
+</div>
+<aside>技术上：桌面端用 Go 写，基于 MyGo 框架；Android 用 Kotlin 和 Jetpack Compose；iOS 用 SwiftUI。测试方面，我们让转换矩阵在每个平台的真实引擎上跑一遍。发布是自动的：推送 v 开头的标签，GitHub Actions 就会构建所有平台并发布。</aside>
+</section>
