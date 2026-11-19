@@ -303,7 +303,11 @@ func TestNoNonsenseRoutes(t *testing.T) {
 	if CanConvert("ttf", "otf") || CanConvert("otf", "ttf") {
 		t.Error("a font offered outlines it does not have")
 	}
-	if !CanConvert("gif", "mp4") || !CanConvert("gif", "webm") || !CanConvert("mov", "mp3") || !CanConvert("pdf", "txt") || !CanConvert("ttf", "woff") {
+	if !CanConvert("pdf", "txt") || !CanConvert("ttf", "woff") {
 		t.Error("real routes lost")
+	}
+	// Video and sound go through FFmpeg, where there is one.
+	if ffmpegPath() != "" && (!CanConvert("gif", "mp4") || !CanConvert("gif", "webm") || !CanConvert("mov", "mp3")) {
+		t.Error("real routes through FFmpeg lost")
 	}
 }

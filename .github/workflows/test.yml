@@ -21,7 +21,10 @@ jobs:
       - name: Fetch FFmpeg
         run: tools/fetch-ffmpeg.sh darwin
       - name: Test, every source to every target
-        run: FORMIGO_MATRIX=1 FORMIGO_FFMPEG="$PWD/resources/darwin-arm64/bin/ffmpeg" go test -v -run 'TestMatrix' ./internal/convert && go test ./...
+        run: |
+          export FORMIGO_FFMPEG="$PWD/resources/darwin-arm64/bin/ffmpeg"
+          FORMIGO_MATRIX=1 go test -v -run 'TestMatrix' ./internal/convert
+          go test ./...
 
   android:
     name: Android conversions
