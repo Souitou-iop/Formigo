@@ -149,7 +149,12 @@ func TestImages(t *testing.T) {
 }
 
 func TestJPEGXLInput(t *testing.T) {
-	out := run(t, filepath.Join("testdata", "seed.jxl"), "png", Options{})
+	data, err := os.ReadFile(filepath.Join("testdata", "seed.jxl"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	src := write(t, t.TempDir(), "seed.jxl", data)
+	out := run(t, src, "png", Options{})
 	img, err := png.Decode(bytes.NewReader(out))
 	if err != nil {
 		t.Fatal(err)
