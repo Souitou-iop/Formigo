@@ -134,6 +134,8 @@ func TestConvertFlow(t *testing.T) {
 	if p.a.targets[convert.Image] != "webp" || !p.tt.HasText("画质") {
 		t.Fatalf("target %q, texts %q", p.a.targets[convert.Image], p.tt.Texts())
 	}
+	// Scroll the options panel to the data and document groups.
+	p.tt.Scroll(850, 500, 0, 480)
 	if err := p.tt.Click("YAML 配置"); err != nil {
 		t.Fatal(err)
 	}

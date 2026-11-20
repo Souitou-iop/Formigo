@@ -28,7 +28,7 @@ func TestMatrix(t *testing.T) {
 	}
 	ff := needFFmpeg(t)
 	dir := t.TempDir()
-	seeds := map[string]string{}
+	seeds := map[string]string{"jxl": filepath.Join("testdata", "seed.jxl")}
 
 	// The sources made directly; every other format comes from converting
 	// these, so that each one converted to is also tried as a source.
@@ -166,7 +166,9 @@ func TestMatrix(t *testing.T) {
 		var smu sync.Mutex
 		for _, from := range todo {
 			tried[from] = true
+			smu.Lock()
 			src := seeds[from]
+			smu.Unlock()
 			for _, to := range Targets(from) {
 				wg.Add(1)
 				go func() {

@@ -148,6 +148,17 @@ func TestImages(t *testing.T) {
 	}
 }
 
+func TestJPEGXLInput(t *testing.T) {
+	out := run(t, filepath.Join("testdata", "seed.jxl"), "png", Options{})
+	img, err := png.Decode(bytes.NewReader(out))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if b := img.Bounds(); b.Dx() != 96 || b.Dy() != 64 {
+		t.Fatalf("size %v", b)
+	}
+}
+
 func TestOrientation(t *testing.T) {
 	img := image.NewNRGBA(image.Rect(0, 0, 3, 2))
 	img.Set(0, 0, color.White)

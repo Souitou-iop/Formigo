@@ -16,6 +16,7 @@ import (
 	"os"
 	"slices"
 
+	_ "github.com/gen2brain/jpegxl"
 	"github.com/go-pdf/fpdf"
 	webp "github.com/mayahiro/go-webp"
 	"github.com/spakin/netpbm"
@@ -28,7 +29,7 @@ import (
 
 // pictureIn are the pictures Go reads itself; pictureOut those it writes.
 var (
-	pictureIn  = []string{"png", "jpg", "webp", "gif", "bmp", "tiff", "ico", "tga", "qoi", "ppm", "svg"}
+	pictureIn  = []string{"png", "jpg", "webp", "gif", "bmp", "tiff", "ico", "tga", "qoi", "ppm", "svg", "jxl"}
 	pictureOut = []string{"png", "jpg", "webp", "gif", "bmp", "tiff", "ico", "icns", "tga", "qoi", "ppm", "pdf"}
 )
 

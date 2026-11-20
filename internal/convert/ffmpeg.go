@@ -36,7 +36,7 @@ func init() {
 		// An animated GIF as a video.
 		&edge{engine: "ffmpeg", from: []string{"gif"}, to: []string{"mp4", "webm", "mov"}, cost: 1, first: true, ok: have, run: runFFmpeg},
 		// Pictures Go cannot read, where the system cannot either.
-		&edge{engine: "ffmpeg", from: []string{"heic", "avif", "jxl"}, to: []string{"png"}, cost: 2, ok: have, run: runFFmpeg},
+		&edge{engine: "ffmpeg", from: []string{"heic", "avif"}, to: []string{"png"}, cost: 2, ok: have, run: runFFmpeg},
 		&edge{engine: "ffmpeg", from: []string{"png", "jpg"}, to: []string{"avif"}, cost: 1,
 			ok: func() bool { return have() && encoder("libsvtav1", "libaom-av1") != "" }, run: runFFmpeg},
 		&edge{engine: "ffmpeg", from: []string{"png", "jpg"}, to: []string{"jxl"}, cost: 1,
@@ -290,6 +290,24 @@ var (
 	outTimeRe  = regexp.MustCompile(`^out_time_us=(\d+)`)
 )
 
+// FFmpeg writes diagnostics while its progress stream is being consumed.
+type diagnosticBuffer struct {
+	mu  sync.Mutex
+	buf bytes.Buffer
+}
+
+func (b *diagnosticBuffer) Write(p []byte) (int, error) {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	return b.buf.Write(p)
+}
+
+func (b *diagnosticBuffer) String() string {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	return b.buf.String()
+}
+
 func runFFmpeg(j *job) error {
 	path := ffmpegPath()
 	if path == "" {
@@ -303,7 +321,7 @@ func runFFmpeg(j *job) error {
 	args = append(args, "-progress", "pipe:1", "-nostats", j.dst)
 	cmd := exec.CommandContext(j.ctx, path, args...)
 	hideWindow(cmd)
-	var stderr bytes.Buffer
+	var stderr diagnosticBuffer
 	cmd.Stderr = &stderr
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {

@@ -7,6 +7,7 @@ require (
 	github.com/JohannesKaufmann/html-to-markdown/v2 v2.5.2
 	github.com/bodgit/sevenzip v1.6.5
 	github.com/egoist/mygo v0.10.1-0.20261117192013-e88574c82acc
+	github.com/gen2brain/jpegxl v0.6.0
 	github.com/go-pdf/fpdf v0.9.0
 	github.com/klippa-app/go-pdfium v1.21.5
 	github.com/mayahiro/go-webp v0.4.0
