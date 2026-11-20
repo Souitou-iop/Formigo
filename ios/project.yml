@@ -19,8 +19,8 @@ settings:
     SWIFT_VERSION: "5.0"
     SWIFT_UPCOMING_FEATURE_BARE_SLASH_REGEX_LITERALS: YES
     OTHER_SWIFT_FLAGS: "-enable-bare-slash-regex"
-    MARKETING_VERSION: "0.4.0"
-    CURRENT_PROJECT_VERSION: "400"
+    MARKETING_VERSION: "0.4.1"
+    CURRENT_PROJECT_VERSION: "401"
 targets:
   Formigo:
     type: application

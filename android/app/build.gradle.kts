@@ -17,8 +17,8 @@ android {
         // falls back to a frosted, translucent surface.
         minSdk = 28
         targetSdk = 36
-        versionCode = 400
-        versionName = "0.4.0"
+        versionCode = 401
+        versionName = "0.4.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 

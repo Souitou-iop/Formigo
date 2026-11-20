@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.1
+
+### 🐛 修复 / Fixes
+
+- 桌面端改用内置解码器读取 JPEG XL 输入，恢复 JXL 转 PNG、JPG、WebP、PDF 等目标；捆绑的 FFmpeg 原本缺少 JPEG XL 解码器 / Desktop now decodes JPEG XL inputs with its built-in decoder, restoring conversions from JXL to the offered targets; the bundled FFmpeg had no JPEG XL decoder
+- 修复 FFmpeg 进度解析读取诊断缓冲区时的数据竞态 / Fixed a data race while reading the diagnostics buffer used to parse FFmpeg progress
+
 ## 0.4.0
 
 ### 🎨 界面 / Design
