@@ -63,6 +63,22 @@ func (p *pumped) settle(t *testing.T) {
 	}
 }
 
+// clickScrolled scrolls the options panel down until it can click label.
+func (p *pumped) clickScrolled(t *testing.T, label string) {
+	t.Helper()
+	var last error
+	for range 12 {
+		if err := p.tt.Click(label); err == nil {
+			return
+		} else {
+			last = err
+		}
+		p.tt.Scroll(850, 500, 0, 180)
+		p.tt.Frame()
+	}
+	t.Fatalf("click %q: %v", label, last)
+}
+
 func shot(t *testing.T, tt *ui.Tester, name string) {
 	dir := os.Getenv("FORMIGO_SHOTS")
 	if dir == "" {
@@ -134,14 +150,9 @@ func TestConvertFlow(t *testing.T) {
 	if p.a.targets[convert.Image] != "webp" || !p.tt.HasText("画质") {
 		t.Fatalf("target %q, texts %q", p.a.targets[convert.Image], p.tt.Texts())
 	}
-	// Scroll the options panel to the data and document groups.
-	p.tt.Scroll(850, 500, 0, 480)
-	if err := p.tt.Click("YAML 配置"); err != nil {
-		t.Fatal(err)
-	}
-	if err := p.tt.Click("TXT 纯文本"); err != nil {
-		t.Fatal(err)
-	}
+	p.clickScrolled(t, "YAML 配置")
+	p.tt.Advance(500 * time.Millisecond)
+	p.clickScrolled(t, "TXT 纯文本")
 	p.tt.Advance(time.Second)
 	shot(t, p.tt, "04-options")
 
