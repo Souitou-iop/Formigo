@@ -38,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.formigo.app.AppModel
+import dev.formigo.app.Update
 import dev.formigo.app.convert.Formats
 import dev.formigo.app.convert.Opt
 import dev.formigo.app.convert.Options
@@ -168,6 +169,41 @@ fun switchColors() = LocalPalette.current.let { p ->
         checkedThumbColor = p.accentInk, checkedTrackColor = p.accent, checkedBorderColor = p.accent,
         uncheckedThumbColor = p.faint, uncheckedTrackColor = p.bg, uncheckedBorderColor = p.lineStrong,
     )
+}
+
+/** What the settings' 检查更新 found, opening while the check is on its way. */
+@Composable
+fun UpdateSheet(model: AppModel) {
+    val p = LocalPalette.current
+    if (!model.updateOpen) return
+    FormigoSheet({ model.updateOpen = false }) {
+        Column(
+            Modifier.navigationBarsPadding().padding(horizontal = 22.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            val title = when (val r = model.updateState) {
+                null -> "正在检查更新"
+                is Update.State.Available -> "有新版本 ${r.version}"
+                Update.State.UpToDate -> "已是最新版本"
+                Update.State.Offline -> "连不上 GitHub"
+            }
+            Text(title, color = p.ink, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold, letterSpacing = (-0.3).sp)
+            when (model.updateState) {
+                is Update.State.Available -> Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    StickerButton("稍后", null, { model.updateOpen = false }, Modifier.width(104.dp), primary = false, lift = 3.dp, fontSize = 15.sp)
+                    StickerButton("前往下载", Icons.save, {
+                        model.updateOpen = false
+                        model.openReleases()
+                    }, Modifier.weight(1f), primary = true, lift = 3.dp, fontSize = 15.sp, keyHaptics = true)
+                }
+                Update.State.Offline -> Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    StickerButton("好", null, { model.updateOpen = false }, Modifier.width(104.dp), primary = false, lift = 3.dp, fontSize = 15.sp)
+                    StickerButton("重试", Icons.retry, { model.checkForUpdates() }, Modifier.weight(1f), primary = true, lift = 3.dp, fontSize = 15.sp)
+                }
+                else -> StickerButton("知道了", null, { model.updateOpen = false }, Modifier.fillMaxWidth(), primary = true, lift = 3.dp, fontSize = 15.sp)
+            }
+        }
+    }
 }
 
 @Composable

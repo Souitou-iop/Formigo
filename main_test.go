@@ -13,8 +13,18 @@ import (
 
 	"formigo/internal/convert"
 
+	"github.com/egoist/mygo"
+	"github.com/egoist/mygo/plugins/updater"
+	"github.com/egoist/mygo/plugins/updater/native"
 	"github.com/egoist/mygo/ui"
 )
+
+// TestMain runs with the plugins the app uses, so that the views that read
+// the updater see it as they do beside main.
+func TestMain(m *testing.M) {
+	mygo.Use(native.New(updater.Options{Language: "zh-Hans"}))
+	os.Exit(m.Run())
+}
 
 // pumped runs the app's updates from the workers on the test's goroutine,
 // as the window's Update runs them on the main thread.

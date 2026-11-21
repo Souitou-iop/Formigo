@@ -3,7 +3,10 @@ import SwiftUI
 struct SettingsScreen: View {
     @EnvironmentObject private var settings: AppSettings
     @Environment(\.palette) private var p
+    @Environment(\.openURL) private var openURL
     @State private var confirmReset = false
+    @State private var checking = false
+    @State private var update: UpdateCheck.State?
 
     var body: some View {
         NavigationStack {
@@ -77,10 +80,28 @@ struct SettingsScreen: View {
                 }
                 .listRowBackground(p.surface)
 
+                Section("关于") {
+                    Button {
+                        checking = true
+                        Task {
+                            update = await UpdateCheck.check(running: version)
+                            checking = false
+                        }
+                    } label: {
+                        HStack {
+                            Text("检查更新")
+                            Spacer()
+                            if checking { ProgressView() }
+                        }
+                    }
+                    .disabled(checking)
+                }
+                .listRowBackground(p.surface)
+
                 Section {
                     Button("恢复默认设置", role: .destructive) { confirmReset = true }
                 } footer: {
-                    Text("Formigo \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "")")
+                    Text("Formigo \(version)")
                         .frame(maxWidth: .infinity)
                         .padding(.top, 12)
                 }
@@ -92,6 +113,33 @@ struct SettingsScreen: View {
             .confirmationDialog("恢复默认设置？", isPresented: $confirmReset, titleVisibility: .visible) {
                 Button("恢复默认", role: .destructive) { settings.reset() }
             }
+            .alert(alertTitle, isPresented: Binding(get: { update != nil }, set: { if !$0 { update = nil } })) {
+                if case .available = update {
+                    Button("前往下载") { openURL(UpdateCheck.releases) }
+                    Button("稍后", role: .cancel) {}
+                } else {
+                    Button("好", role: .cancel) {}
+                }
+            } message: {
+                if case let .available(v) = update {
+                    Text("Formigo \(v) 已发布，前往 GitHub 的发布页下载。")
+                }
+            }
+        }
+    }
+
+    /// The version the app runs, as the bundle tells it.
+    private var version: String {
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
+    }
+
+    /// What the check found, as the alert's title.
+    private var alertTitle: String {
+        switch update {
+        case .available: return "有新版本"
+        case .upToDate: return "已是最新版本"
+        case .offline: return "连不上 GitHub"
+        case nil: return ""
         }
     }
 

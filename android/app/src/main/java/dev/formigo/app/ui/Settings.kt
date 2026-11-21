@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -131,6 +132,17 @@ fun SettingsPage(model: AppModel) {
             item {
                 Group("关于") {
                     Row("版本") { Text(BuildConfigLite.version(context), color = p.muted, fontSize = 15.sp, modifier = Modifier.padding(end = 12.dp)) }
+                    Divider()
+                    Row("检查更新") {
+                        SoftButton(
+                            onClick = { model.checkForUpdates() },
+                            shape = RoundedCornerShape(10.dp),
+                            label = "检查更新",
+                            modifier = Modifier.height(38.dp),
+                        ) {
+                            Text("检查更新", color = p.muted, fontSize = 15.sp, modifier = Modifier.padding(horizontal = 12.dp))
+                        }
+                    }
                 }
             }
         }

@@ -380,6 +380,20 @@ final class ThemeTests: XCTestCase {
     }
 }
 
+final class UpdateCheckTests: XCTestCase {
+    func testAReleaseRunsAheadOfTheRunningVersion() {
+        XCTAssertTrue(UpdateCheck.newer("v0.4.2", running: "0.4.1"))
+        XCTAssertTrue(UpdateCheck.newer("v1.0", running: "0.9.9"))
+        XCTAssertTrue(UpdateCheck.newer("v0.5", running: "0.4.10"))
+    }
+
+    func testTheRunningVersionAndOlderOnesStay() {
+        XCTAssertFalse(UpdateCheck.newer("v0.4.1", running: "0.4.1"))
+        XCTAssertFalse(UpdateCheck.newer("v0.4.0", running: "0.4.1"))
+        XCTAssertFalse(UpdateCheck.newer("v0.3.9", running: "0.4.0"))
+    }
+}
+
 // MARK: - Every source to every target
 
 /// Converts a sample of every format the app reads (testdata/seeds, shared

@@ -113,6 +113,11 @@ class AppModel(app: Application) : AndroidViewModel(app) {
     var optionsKind by mutableStateOf<Kind?>(null)
     var addMenu by mutableStateOf(false)
 
+    /** The settings' 检查更新: the sheet is open, and what the check found. */
+    var updateOpen by mutableStateOf(false)
+    var updateState by mutableStateOf<Update.State?>(null)
+        private set
+
     /** Bumped each time a run is done, to cheer. */
     var cheers by mutableIntStateOf(0)
 
@@ -144,6 +149,22 @@ class AppModel(app: Application) : AndroidViewModel(app) {
         update { it.copy(options = f(it.options)) }
         // Files done in formats these options shape are converted again on the next run.
         items.filter { it.status == Status.DONE && !it.already }.forEach { reset(it) }
+    }
+
+    /** Asks GitHub whether a newer release is out, and says so in the sheet. */
+    fun checkForUpdates() {
+        updateOpen = true
+        updateState = null
+        viewModelScope.launch { updateState = Update.check(BuildConfigLite.version(ctx)) }
+    }
+
+    /** The newest release's page, where its APK is, in a browser. */
+    fun openReleases() {
+        runCatching {
+            ctx.startActivity(
+                Intent(Intent.ACTION_VIEW, Uri.parse(Update.releases)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+            )
+        }
     }
 
     // The queue's groups.

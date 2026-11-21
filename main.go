@@ -18,6 +18,8 @@ import (
 	"formigo/internal/heif"
 
 	"github.com/egoist/mygo"
+	"github.com/egoist/mygo/plugins/updater"
+	"github.com/egoist/mygo/plugins/updater/native"
 	"github.com/egoist/mygo/ui"
 )
 
@@ -683,6 +685,16 @@ func (a *formigo) openSettings() {
 	w.OnClosed(func() { a.settingsWin = nil })
 }
 
+// refresh redraws the open windows: the About page of the settings shows
+// what the updater has found, and it may have found it while either was
+// closed or in the background.
+func (a *formigo) refresh() {
+	a.update(func() {})
+	if a.settingsWin != nil {
+		a.settingsWin.Update(func() {})
+	}
+}
+
 func fileExists(p string) bool {
 	st, err := os.Stat(p)
 	return err == nil && !st.IsDir()
@@ -741,11 +753,17 @@ func main() {
 			convert.SetFFmpeg(p)
 		}
 	}
+	// The updater draws its window in the app's own UI and checks in the
+	// background once a day; the app speaks Chinese, so does it.
+	mygo.Use(native.New(updater.Options{Language: "zh-Hans"}))
 	a := newApp()
 	if dir, err := mygo.App.Path(mygo.PathUserData); err == nil {
 		a.prefsPath = filepath.Join(dir, "settings.json")
 	}
 	a.load()
+	// What the updater finds shows on the settings' About page, in either
+	// window.
+	updater.OnChange(func() { a.refresh() })
 	if runtime.GOOS == "darwin" {
 		mygo.App.SetMenu(a.menu())
 	}
@@ -814,6 +832,7 @@ func (a *formigo) menu() *mygo.Menu {
 	return mygo.NewMenu([]*mygo.MenuItem{
 		{Label: "Formigo", Submenu: []*mygo.MenuItem{
 			{Role: mygo.RoleAbout, Label: "关于 Formigo"},
+			updater.MenuItem(),
 			mygo.Separator(),
 			{Label: "设置…", Accelerator: "CmdOrCtrl+,", Click: onMain(a.openSettings)},
 			mygo.Separator(),

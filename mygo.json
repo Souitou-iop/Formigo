@@ -5,6 +5,10 @@
   "version": "0.4.1",
   "copyright": "© 2026 Formigo",
   "out": "dist",
+  "updates": {
+    "publicKey": "3/RrPZQiSq/4zWnUDqe+hEc1g8HRQGG7vBeuDUzZQOk=",
+    "github": "Souitou-iop/Formigo"
+  },
   "linux": {
     "comment": "Convert pictures, sound, data and documents on your computer",
     "categories": [

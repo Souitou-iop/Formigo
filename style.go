@@ -254,6 +254,7 @@ var (
 	icInfo    = icon(`<circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><path d="M12 7.5v.01"/>`)
 	icUpDown  = icon(`<path d="M8 9.5l4-4 4 4"/><path d="M8 14.5l4 4 4-4"/>`)
 	icRetry   = icon(`<path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3L4.5 9"/><path d="M4.5 4.5V9H9"/>`)
+	icUpdate  = icon(`<path d="M12 3.5v10"/><path d="M7.5 9.5l4.5 4.5 4.5-4.5"/><path d="M4.5 16v2.5a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V16"/>`)
 )
 
 var kindIcons = map[convert.Kind]*ui.SVG{

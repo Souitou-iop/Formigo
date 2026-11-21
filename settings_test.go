@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"path/filepath"
+	"slices"
 	"testing"
 	"time"
 
@@ -45,6 +46,23 @@ func TestSettingsPersist(t *testing.T) {
 	d.load()
 	if d.prefs.Accent != "neutral" || !d.prefs.Mascot {
 		t.Errorf("a broken file should leave the defaults: %+v", d.prefs)
+	}
+}
+
+// TestAppMenuPutsTheUpdateCheckBesideAbout walks the macOS menu bar: the
+// app menu offers the updater's 检查更新 right after 关于 Formigo.
+func TestAppMenuPutsTheUpdateCheckBesideAbout(t *testing.T) {
+	m := newApp().menu()
+	labels := []string{}
+	for _, it := range m.Items()[0].Submenu {
+		labels = append(labels, it.Label)
+	}
+	i := slices.Index(labels, "关于 Formigo")
+	if i < 0 || i+1 >= len(labels) {
+		t.Fatalf("no 关于 Formigo among %q", labels)
+	}
+	if labels[i+1] != "检查更新…" {
+		t.Errorf("no 检查更新… after 关于 Formigo: %q", labels)
 	}
 }
 
@@ -118,6 +136,9 @@ func TestSettingsWindow(t *testing.T) {
 		t.Fatal(err)
 	}
 	tt.Advance(time.Second)
+	if !tt.HasText("检查更新") {
+		t.Errorf("no 检查更新 in %q", tt.Texts())
+	}
 	shot(t, tt, "24-settings-about")
 	if err := tt.Click("恢复默认设置"); err != nil {
 		t.Fatal(err)

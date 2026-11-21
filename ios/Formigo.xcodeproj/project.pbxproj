@@ -16,6 +16,7 @@
 		55A1593F93E36EC4A5B7AE11 /* FormigoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2150B599985BD62E87545E37 /* FormigoTests.swift */; };
 		5A572E534693E685BBC8C02B /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1287E6F962652E509887D66 /* AppSettings.swift */; };
 		682A6B88DAC1AB162A6C67A5 /* Engine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D232D791139A504BD64EA908 /* Engine.swift */; };
+		81B84C9C7C8F36BDF87BFD86 /* UpdateCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51E2C3D45A94936F160B988F /* UpdateCheck.swift */; };
 		84D5123A7C362B16F6453176 /* ImageEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13B138D98BB7A6DB91653F5 /* ImageEngine.swift */; };
 		96D72C0ECDCE6B2900566E89 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D33721CCE0040DCF2377C3B /* Assets.xcassets */; };
 		97F5C9D314CEB65CB8D9CDC4 /* AudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AD33E24C93636D9CE514FC /* AudioEngine.swift */; };
@@ -52,6 +53,7 @@
 		389BEA03DAE9FA9D41A48EB8 /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
 		3BA5791E81F142C73F6D36F0 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		4D71D74AF8AC33AE26B26083 /* ConvertScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConvertScreen.swift; sourceTree = "<group>"; };
+		51E2C3D45A94936F160B988F /* UpdateCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateCheck.swift; sourceTree = "<group>"; };
 		55CCFCCBBD010A3DBBA470CF /* VideoEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEngine.swift; sourceTree = "<group>"; };
 		60040186B5C9546703CDE595 /* FormigoTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = FormigoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		67CDFBBAD0CC697D47390445 /* OrbitHero.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitHero.swift; sourceTree = "<group>"; };
@@ -145,6 +147,7 @@
 				C1287E6F962652E509887D66 /* AppSettings.swift */,
 				ABE4F35363E174FC11458B60 /* Queue.swift */,
 				3BA5791E81F142C73F6D36F0 /* Theme.swift */,
+				51E2C3D45A94936F160B988F /* UpdateCheck.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -295,6 +298,7 @@
 				DC8254AA1206866450E3A7AD /* Sheets.swift in Sources */,
 				3570294EFF852397C4727BA4 /* SubtitleEngine.swift in Sources */,
 				B975FD2767938126955E404B /* Theme.swift in Sources */,
+				81B84C9C7C8F36BDF87BFD86 /* UpdateCheck.swift in Sources */,
 				0A3465CF8FD1F03ADEB2124C /* VideoEngine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

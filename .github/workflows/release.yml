@@ -76,7 +76,11 @@ jobs:
         run: FORMIGO_FFMPEG="$PWD/resources/darwin-arm64/bin/ffmpeg" go test ./...
       - name: Build
         # The disk image or installer where the runner can make it; the app
-        # alone otherwise, which the next step packs.
+        # alone otherwise, which the next step packs. The key of
+        # MYGO_UPDATER_PRIVATE_KEY signs the archives and manifests the
+        # installed apps' updates read.
+        env:
+          MYGO_UPDATER_PRIVATE_KEY: ${{ secrets.MYGO_UPDATER_PRIVATE_KEY }}
         run: |
           go tool mygo build -platform "${{ matrix.platform }}" ||
             go tool mygo build -skip-dmg -skip-installer -platform "${{ matrix.platform }}"
@@ -92,13 +96,17 @@ jobs:
                 cp dist/darwin-universal/*.dmg "out/formigo-$v-macos-universal.dmg"
               else
                 ditto -c -k --keepParent dist/darwin-universal/Formigo.app "out/formigo-$v-macos-universal.zip"
-              fi ;;
+              fi
+              cp dist/darwin-universal/formigo-*.tar.gz dist/darwin-universal/*.delta out/ 2> /dev/null || true ;;
             Windows)
               cp dist/windows-amd64/*-setup-*.exe out/ 2> /dev/null || true
-              (cd dist/windows-amd64 && zip -qr "../../out/formigo-$v-windows-amd64-portable.zip" Formigo.exe bin licenses icon.png) ;;
+              (cd dist/windows-amd64 && zip -qr "../../out/formigo-$v-windows-amd64-portable.zip" Formigo.exe bin licenses icon.png)
+              cp dist/windows-amd64/formigo-*.tar.gz dist/windows-amd64/*.delta out/ 2> /dev/null || true ;;
             Linux)
               cp dist/linux-amd64/*.deb dist/linux-amd64/*.rpm dist/linux-amd64/*.tar.gz out/ ;;
           esac
+          # The manifests the installed apps read to update themselves.
+          cp dist/*/update-*.json out/ 2> /dev/null || true
           ls -la out
       - name: Upload
         env:

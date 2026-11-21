@@ -9,6 +9,7 @@ import (
 	"formigo/internal/convert"
 
 	"github.com/egoist/mygo"
+	"github.com/egoist/mygo/plugins/updater"
 	"github.com/egoist/mygo/ui"
 )
 
@@ -501,6 +502,14 @@ func (a *formigo) about(c *ui.Context, p palette) {
 		}
 		ui.Text(c, "Formigo").Font(rounded()).FontSize(30).FontWeight(800).TextColor(p.ink)
 		ui.Text(c, version()).FontSize(13).TextColor(p.muted).FontFeatures("tnum")
+		if v := updater.AvailableVersion(); v != "" {
+			ui.Textf(c, "新版本 %s 可用", v).FontSize(13).FontWeight(650).TextColor(p.accent).FontFeatures("tnum")
+		}
+		check := stickerButton(c, p, "check-updates", icUpdate, "检查更新", false)
+		check.Margin(8, 0, 0, 0)
+		if check.Clicked() {
+			updater.CheckForUpdates()
+		}
 		ui.Row(c).Gap(8).Margin(8, 0, 0, 0).Children(func() {
 			for _, k := range convert.Kinds {
 				pill := ui.Row(c.Key(k)).Gap(6).Padding(4, 10).Radius(999).Background(tintOf(k, a.darkNow))

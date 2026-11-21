@@ -131,6 +131,7 @@ fun FormigoApp(model: AppModel) {
 
         FreshSheet(model)
         OptionsSheet(model)
+        UpdateSheet(model)
     }
 }
 
