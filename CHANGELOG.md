@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.0
+
+### ✨ 新功能 / Features
+
+- 三端都能检查更新了：桌面端每天在后台自动检查一次，发现新版本就弹出窗口展示发布说明，可一键下载安装（增量更新）并在退出后重启换新，也能跳过某个版本；入口在 macOS 应用菜单的「检查更新…」，三端设置 → 关于里也都有手动检查的按钮。Android 和 iOS 检查 GitHub 的最新发布版本，有新版时带你去下载页 / Every platform can now check for updates: the desktop app checks in the background once a day, shows the release notes of a new version in its window and installs it with a delta download, restarting into it as the app quits; a version can be skipped, and the entries are "Check for Updates" in the app menu on macOS and a button in Settings → About everywhere. Android and iOS read GitHub's latest release and take you to its page to download
+- 桌面端的更新带签名校验：安装包由 CI 用 Ed25519 签名，应用用内置公钥验签后才替换自己，改不动的安装位置（如包管理器的目录）不提供自动更新 / Desktop updates are signed: CI signs each archive with Ed25519 and the app verifies it against a key built in before replacing itself; installs it cannot write to, such as a package manager's directory, offer no self-update
+
 ## 0.4.1
 
 ### 🐛 修复 / Fixes
